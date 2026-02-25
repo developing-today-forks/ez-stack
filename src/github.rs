@@ -1,7 +1,7 @@
 use anyhow::{Context, Result, bail};
 use std::process::Command;
 
-use crate::error::RsError;
+use crate::error::EzError;
 
 fn run_gh(args: &[&str]) -> Result<String> {
     let output = Command::new("gh")
@@ -13,7 +13,7 @@ fn run_gh(args: &[&str]) -> Result<String> {
         Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
     } else {
         let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
-        Err(RsError::GhError(stderr).into())
+        Err(EzError::GhError(stderr).into())
     }
 }
 

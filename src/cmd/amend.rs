@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
 use crate::ui;
@@ -10,11 +10,11 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
     let current = git::current_branch()?;
 
     if state.is_trunk(&current) {
-        bail!(RsError::OnTrunk);
+        bail!(EzError::OnTrunk);
     }
 
     if !state.is_managed(&current) {
-        bail!(RsError::BranchNotInStack(current.clone()));
+        bail!(EzError::BranchNotInStack(current.clone()));
     }
 
     if all {
@@ -22,7 +22,7 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
     }
 
     if !all && !git::has_staged_changes()? {
-        bail!(RsError::NothingToCommit);
+        bail!(EzError::NothingToCommit);
     }
 
     git::commit_amend(message)?;
@@ -46,8 +46,8 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
         } else {
             git::checkout(&current)?;
             state.save()?;
-            ui::hint("Resolve conflicts, then run `rs restack`");
-            bail!(RsError::RebaseConflict(child_name.clone()));
+            ui::hint("Resolve conflicts, then run `ez restack`");
+            bail!(EzError::RebaseConflict(child_name.clone()));
         }
     }
 

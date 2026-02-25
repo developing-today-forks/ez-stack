@@ -1,7 +1,7 @@
 use anyhow::{Context, Result, bail};
 use std::process::Command;
 
-use crate::error::RsError;
+use crate::error::EzError;
 
 fn run_git(args: &[&str]) -> Result<String> {
     let output = Command::new("git")
@@ -13,7 +13,7 @@ fn run_git(args: &[&str]) -> Result<String> {
         Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
     } else {
         let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
-        Err(RsError::GitError(stderr).into())
+        Err(EzError::GitError(stderr).into())
     }
 }
 
@@ -98,7 +98,7 @@ pub fn rebase_onto(new_base: &str, old_base: &str, branch: &str) -> Result<bool>
     } else {
         // Some other rebase failure — try to abort and report
         let _ = run_git(&["rebase", "--abort"]);
-        bail!(RsError::GitError(stderr));
+        bail!(EzError::GitError(stderr));
     }
 }
 
@@ -146,7 +146,7 @@ pub fn default_branch() -> Result<String> {
         }
     }
 
-    bail!("could not detect default branch — set it manually with `rs init --trunk <branch>`")
+    bail!("could not detect default branch — set it manually with `ez init --trunk <branch>`")
 }
 
 pub fn log_oneline(range: &str, max: usize) -> Result<Vec<(String, String)>> {

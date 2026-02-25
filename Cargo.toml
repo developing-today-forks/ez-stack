@@ -1,18 +1,18 @@
 [package]
-name = "rs-stack"
-version = "0.1.0"
+name = "ez-stack"
+version = "0.1.1"
 edition = "2024"
 rust-version = "1.85"
 description = "A CLI tool for managing stacked PRs with GitHub"
 license = "MIT"
-repository = "https://github.com/rohoswagger/rs-stack"
-homepage = "https://github.com/rohoswagger/rs-stack"
+repository = "https://github.com/rohoswagger/ez-stack"
+homepage = "https://github.com/rohoswagger/ez-stack"
 keywords = ["git", "github", "stacked-prs", "cli", "developer-tools"]
 categories = ["command-line-utilities", "development-tools"]
 readme = "README.md"
 
 [[bin]]
-name = "rs"
+name = "ez"
 path = "src/main.rs"
 
 [dependencies]

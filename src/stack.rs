@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -34,7 +34,7 @@ impl StackState {
 
     pub fn meta_dir() -> Result<PathBuf> {
         let root = git::repo_root()?;
-        Ok(PathBuf::from(root).join(".git").join("rs"))
+        Ok(PathBuf::from(root).join(".git").join("ez"))
     }
 
     pub fn state_path() -> Result<PathBuf> {
@@ -48,7 +48,7 @@ impl StackState {
     pub fn load() -> Result<Self> {
         let path = Self::state_path()?;
         if !path.exists() {
-            bail!(RsError::NotInitialized);
+            bail!(EzError::NotInitialized);
         }
         let data = fs::read_to_string(&path)?;
         let state: StackState = serde_json::from_str(&data)?;
@@ -82,13 +82,13 @@ impl StackState {
     pub fn get_branch(&self, name: &str) -> Result<&BranchMeta> {
         self.branches
             .get(name)
-            .ok_or_else(|| RsError::BranchNotInStack(name.to_string()).into())
+            .ok_or_else(|| EzError::BranchNotInStack(name.to_string()).into())
     }
 
     pub fn get_branch_mut(&mut self, name: &str) -> Result<&mut BranchMeta> {
         self.branches
             .get_mut(name)
-            .ok_or_else(|| RsError::BranchNotInStack(name.to_string()).into())
+            .ok_or_else(|| EzError::BranchNotInStack(name.to_string()).into())
     }
 
     pub fn children_of(&self, parent: &str) -> Vec<String> {

@@ -2,10 +2,10 @@ use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(
-    name = "rs",
+    name = "ez",
     about = "Stacked PRs for GitHub — manage dependent branches with ease",
     version,
-    after_help = "Run `rs <command> --help` for more information on a specific command."
+    after_help = "Run `ez <command> --help` for more information on a specific command."
 )]
 pub struct Cli {
     #[command(subcommand)]
@@ -14,7 +14,7 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Initialize rs in the current git repository
+    /// Initialize ez in the current git repository
     Init {
         /// Trunk branch name (auto-detected if not provided)
         #[arg(long)]

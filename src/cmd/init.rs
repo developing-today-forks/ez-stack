@@ -1,17 +1,17 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
 use crate::ui;
 
 pub fn run(trunk: Option<String>) -> Result<()> {
     if !git::is_repo() {
-        bail!(RsError::NotARepo);
+        bail!(EzError::NotARepo);
     }
 
     if StackState::is_initialized()? {
-        bail!(RsError::AlreadyInitialized);
+        bail!(EzError::AlreadyInitialized);
     }
 
     let trunk = match trunk {
@@ -22,6 +22,6 @@ pub fn run(trunk: Option<String>) -> Result<()> {
     let state = StackState::new(trunk.clone());
     state.save()?;
 
-    ui::success(&format!("Initialized rs with trunk branch `{trunk}`"));
+    ui::success(&format!("Initialized ez with trunk branch `{trunk}`"));
     Ok(())
 }

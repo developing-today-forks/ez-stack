@@ -94,8 +94,8 @@ pub fn run() -> Result<()> {
         } else {
             // Save progress so the user can fix and continue.
             state.save()?;
-            ui::hint("Resolve the conflicts manually, then run `rs restack` to continue.");
-            anyhow::bail!(crate::error::RsError::RebaseConflict(branch_name.clone()));
+            ui::hint("Resolve the conflicts manually, then run `ez restack` to continue.");
+            anyhow::bail!(crate::error::EzError::RebaseConflict(branch_name.clone()));
         }
     }
 

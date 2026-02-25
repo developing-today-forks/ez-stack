@@ -1,13 +1,13 @@
-# Contributing to rs
+# Contributing to ez
 
-Thanks for your interest in contributing to `rs`! This guide covers everything you need to get started.
+Thanks for your interest in contributing to `ez`! This guide covers everything you need to get started.
 
 ## Development setup
 
 ```bash
 # Clone the repo
-git clone https://github.com/rohoswagger/rs-stack.git
-cd rs
+git clone https://github.com/rohoswagger/ez-stack.git
+cd ez-stack
 
 # Build
 cargo build
@@ -58,7 +58,7 @@ src/
 ├── main.rs          # Entry point and command dispatch
 ├── cli.rs           # CLI argument parsing (clap derive)
 ├── cmd/             # One module per command (create.rs, sync.rs, push.rs, etc.)
-├── stack.rs         # Stack state model and persistence (.git/rs/stack.json)
+├── stack.rs         # Stack state model and persistence (.git/ez/stack.json)
 ├── git.rs           # Git shell-out operations
 ├── github.rs        # Wrapper functions for shelling out to gh
 ├── ui.rs            # Terminal colors, spinners, tree rendering
@@ -71,7 +71,7 @@ src/
 |------|---------|
 | `src/main.rs` | Entry point and command dispatch. |
 | `src/cli.rs` | CLI argument parsing using clap derive macros. |
-| `src/stack.rs` | Defines the `Stack` and `Branch` structs. Handles serialization and deserialization of `.git/rs/stack.json`. |
+| `src/stack.rs` | Defines the `Stack` and `Branch` structs. Handles serialization and deserialization of `.git/ez/stack.json`. |
 | `src/git.rs` | Thin wrappers around `git` commands (`rebase`, `checkout`, `branch`, etc.) using `std::process::Command`. |
 | `src/github.rs` | Thin wrappers around `gh` commands (`pr create`, `pr edit`, `pr view`, etc.). |
 | `src/ui.rs` | Terminal colors, spinners, and tree rendering for stack visualization. |
@@ -90,11 +90,11 @@ We deliberately call the `git` and `gh` CLIs as subprocesses rather than using `
 
 The tradeoff is a dependency on both CLIs being installed and some overhead from process spawning, which is negligible for a developer tool.
 
-### Why .git/rs/stack.json?
+### Why .git/ez/stack.json?
 
 - Stored inside `.git/` so it's never accidentally committed.
 - Single file so reads and writes are atomic (via write-to-temp + rename).
-- JSON so it's human-readable and easy to debug. If `rs` ever gets into a bad state, you can edit the file by hand.
+- JSON so it's human-readable and easy to debug. If `ez` ever gets into a bad state, you can edit the file by hand.
 - Versioned with a `"version"` field so we can migrate the format in the future without breaking existing repos.
 
 ### Why rebase --onto?

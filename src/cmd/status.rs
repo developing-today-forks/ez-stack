@@ -18,7 +18,7 @@ pub fn run() -> Result<()> {
         let children = state.children_of(&current);
         if children.is_empty() {
             ui::info("No stacked branches yet.");
-            ui::hint("Run `rs create <name>` to start a stack.");
+            ui::hint("Run `ez create <name>` to start a stack.");
         } else {
             ui::info(&format!("{} stacked branch(es):", children.len()));
             for child in &children {
@@ -30,8 +30,8 @@ pub fn run() -> Result<()> {
 
     // Branch must be managed
     if !state.is_managed(&current) {
-        ui::warn(&format!("Branch `{current}` is not tracked by rs."));
-        ui::hint("Run `rs create <name>` from a tracked branch to add it to the stack.");
+        ui::warn(&format!("Branch `{current}` is not tracked by ez."));
+        ui::hint("Run `ez create <name>` from a tracked branch to add it to the stack.");
         return Ok(());
     }
 
@@ -80,7 +80,7 @@ pub fn run() -> Result<()> {
         }
     } else {
         ui::info("PR: not yet created");
-        ui::hint("Run `rs submit` to create a PR.");
+        ui::hint("Run `ez submit` to create a PR.");
     }
 
     // Stack position
@@ -118,7 +118,7 @@ pub fn run() -> Result<()> {
     let parent_actual_head = git::rev_parse(&meta.parent)?;
     if meta.parent_head != parent_actual_head {
         ui::warn("Branch may need restacking — parent has moved.");
-        ui::hint("Run `rs restack` to update.");
+        ui::hint("Run `ez restack` to update.");
     }
 
     Ok(())

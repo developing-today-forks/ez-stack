@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
 use crate::ui;
@@ -36,8 +36,8 @@ pub fn run() -> Result<()> {
         } else {
             git::checkout(&original_branch)?;
             state.save()?;
-            ui::hint("Resolve the conflicts manually, then run `rs restack` again.");
-            bail!(RsError::RebaseConflict(branch_name.clone()));
+            ui::hint("Resolve the conflicts manually, then run `ez restack` again.");
+            bail!(EzError::RebaseConflict(branch_name.clone()));
         }
     }
 

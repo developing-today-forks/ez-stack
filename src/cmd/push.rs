@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
@@ -11,11 +11,11 @@ pub fn run(draft: bool) -> Result<()> {
     let current = git::current_branch()?;
 
     if state.is_trunk(&current) {
-        bail!(RsError::OnTrunk);
+        bail!(EzError::OnTrunk);
     }
 
     if !state.is_managed(&current) {
-        bail!(RsError::BranchNotInStack(current.clone()));
+        bail!(EzError::BranchNotInStack(current.clone()));
     }
 
     let remote = &state.remote.clone();
@@ -63,7 +63,7 @@ pub fn push_or_update_pr(
                 .map(|(_, msg)| msg.clone())
                 .unwrap_or_else(|| branch.to_string());
 
-            let body = "Part of a stack managed by `rs`.";
+            let body = "Part of a stack managed by `ez`.";
 
             let pr = github::create_pr(&title, body, parent, branch, draft)?;
             state.get_branch_mut(branch)?.pr_number = Some(pr.number);

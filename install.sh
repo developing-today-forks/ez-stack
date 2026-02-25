@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# rs-stack installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/rohoswagger/rs-stack/main/install.sh | bash
+# ez-stack installer
+# Usage: curl -fsSL https://raw.githubusercontent.com/rohoswagger/ez-stack/main/install.sh | bash
 # Or:    curl -fsSL ... | bash -s -- v0.2.0   (specific version)
 
-REPO="rohoswagger/rs-stack"
-BINARY="rs"
-INSTALL_DIR="${RS_INSTALL_DIR:-$HOME/.local/bin}"
+REPO="rohoswagger/ez-stack"
+BINARY="ez"
+INSTALL_DIR="${EZ_INSTALL_DIR:-$HOME/.local/bin}"
 
 info() { printf "\033[1;34m::\033[0m %s\n" "$1"; }
 success() { printf "\033[1;32m✓\033[0m %s\n" "$1"; }
@@ -22,7 +22,7 @@ if [ "$VERSION" = "latest" ]; then
         error "Could not determine latest version. Check https://github.com/${REPO}/releases"
     fi
 fi
-info "Installing rs ${VERSION}"
+info "Installing ez ${VERSION}"
 
 # Detect OS and architecture
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -41,7 +41,7 @@ case "$ARCH" in
 esac
 
 TARGET="${TARGET_ARCH}-${TARGET_OS}"
-ARCHIVE="rs-${TARGET}.tar.gz"
+ARCHIVE="ez-${TARGET}.tar.gz"
 URL="https://github.com/${REPO}/releases/download/${VERSION}/${ARCHIVE}"
 
 # Download and extract
@@ -61,7 +61,7 @@ mkdir -p "$INSTALL_DIR"
 mv "${TMPDIR}/${BINARY}" "${INSTALL_DIR}/${BINARY}"
 chmod +x "${INSTALL_DIR}/${BINARY}"
 
-success "Installed rs to ${INSTALL_DIR}/${BINARY}"
+success "Installed ez to ${INSTALL_DIR}/${BINARY}"
 
 # Check PATH
 if ! echo "$PATH" | tr ':' '\n' | grep -qx "$INSTALL_DIR"; then
@@ -73,4 +73,4 @@ if ! echo "$PATH" | tr ':' '\n' | grep -qx "$INSTALL_DIR"; then
 fi
 
 echo ""
-success "Run 'rs --help' to get started"
+success "Run 'ez --help' to get started"

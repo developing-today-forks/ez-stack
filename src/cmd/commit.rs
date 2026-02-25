@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
 use crate::ui;
@@ -10,11 +10,11 @@ pub fn run(message: &str, all: bool) -> Result<()> {
     let current = git::current_branch()?;
 
     if state.is_trunk(&current) {
-        bail!(RsError::OnTrunk);
+        bail!(EzError::OnTrunk);
     }
 
     if !state.is_managed(&current) {
-        bail!(RsError::BranchNotInStack(current));
+        bail!(EzError::BranchNotInStack(current));
     }
 
     if all {
@@ -22,7 +22,7 @@ pub fn run(message: &str, all: bool) -> Result<()> {
     }
 
     if !git::has_staged_changes()? {
-        bail!(RsError::NothingToCommit);
+        bail!(EzError::NothingToCommit);
     }
 
     git::commit(message)?;
@@ -41,7 +41,7 @@ pub fn run(message: &str, all: bool) -> Result<()> {
         if !ok {
             // Checkout back to the branch we were on before reporting the conflict.
             git::checkout(&current)?;
-            bail!(RsError::RebaseConflict(child.clone()));
+            bail!(EzError::RebaseConflict(child.clone()));
         }
 
         // Update the child's parent_head to reflect the new base.

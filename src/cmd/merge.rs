@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
@@ -11,11 +11,11 @@ pub fn run(method: &str) -> Result<()> {
     let current = git::current_branch()?;
 
     if state.is_trunk(&current) {
-        bail!(RsError::OnTrunk);
+        bail!(EzError::OnTrunk);
     }
 
     if !state.is_managed(&current) {
-        bail!(RsError::BranchNotInStack(current.clone()));
+        bail!(EzError::BranchNotInStack(current.clone()));
     }
 
     // Find the bottom branch of the stack (closest to trunk).
@@ -25,8 +25,8 @@ pub fn run(method: &str) -> Result<()> {
 
     let pr_number = match pr_number {
         Some(n) => n,
-        None => bail!(RsError::UserMessage(format!(
-            "Branch `{bottom}` has no associated PR — run `rs submit` first"
+        None => bail!(EzError::UserMessage(format!(
+            "Branch `{bottom}` has no associated PR — run `ez submit` first"
         ))),
     };
 
@@ -125,8 +125,8 @@ pub fn run(method: &str) -> Result<()> {
         } else {
             state.save()?;
             ui::error(&format!("Conflict while restacking `{branch_name}`"));
-            ui::hint("Resolve the conflicts manually, then run `rs restack` to continue.");
-            bail!(RsError::RebaseConflict(branch_name.clone()));
+            ui::hint("Resolve the conflicts manually, then run `ez restack` to continue.");
+            bail!(EzError::RebaseConflict(branch_name.clone()));
         }
     }
 

@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
@@ -13,11 +13,11 @@ pub fn run(branch: Option<&str>, force: bool) -> Result<()> {
     let target = branch.unwrap_or(&current).to_string();
 
     if state.is_trunk(&target) {
-        bail!(RsError::OnTrunk);
+        bail!(EzError::OnTrunk);
     }
 
     if !state.is_managed(&target) {
-        bail!(RsError::BranchNotInStack(target.clone()));
+        bail!(EzError::BranchNotInStack(target.clone()));
     }
 
     let meta = state.get_branch(&target)?;
@@ -80,7 +80,7 @@ pub fn run(branch: Option<&str>, force: bool) -> Result<()> {
     ui::success(&format!("Deleted branch `{target}`"));
     if !children.is_empty() {
         ui::hint(&format!(
-            "Run `rs restack` to rebase reparented branches onto `{parent}`"
+            "Run `ez restack` to rebase reparented branches onto `{parent}`"
         ));
     }
 

@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
@@ -11,23 +11,23 @@ pub fn run(onto: &str) -> Result<()> {
     let current = git::current_branch()?;
 
     if state.is_trunk(&current) {
-        bail!(RsError::OnTrunk);
+        bail!(EzError::OnTrunk);
     }
 
     if !state.is_managed(&current) {
-        bail!(RsError::BranchNotInStack(current.clone()));
+        bail!(EzError::BranchNotInStack(current.clone()));
     }
 
     // The --onto target must be trunk or a managed branch.
     if !state.is_trunk(onto) && !state.is_managed(onto) {
-        bail!(RsError::UserMessage(format!(
+        bail!(EzError::UserMessage(format!(
             "Target branch `{onto}` is not trunk or a managed branch"
         )));
     }
 
     // Prevent moving onto self.
     if onto == current {
-        bail!(RsError::UserMessage(
+        bail!(EzError::UserMessage(
             "Cannot move a branch onto itself".to_string()
         ));
     }
@@ -35,7 +35,7 @@ pub fn run(onto: &str) -> Result<()> {
     // Prevent moving onto a descendant (would create a cycle).
     let path = state.path_to_trunk(onto);
     if path.contains(&current) {
-        bail!(RsError::UserMessage(format!(
+        bail!(EzError::UserMessage(format!(
             "Cannot move `{current}` onto `{onto}` — `{onto}` is a descendant of `{current}`"
         )));
     }
@@ -52,7 +52,7 @@ pub fn run(onto: &str) -> Result<()> {
     sp.finish_and_clear();
 
     if !ok {
-        bail!(RsError::RebaseConflict(current.clone()));
+        bail!(EzError::RebaseConflict(current.clone()));
     }
 
     // Update branch metadata.
@@ -96,8 +96,8 @@ pub fn run(onto: &str) -> Result<()> {
             ui::success(&format!("Restacked `{child_name}` onto `{current}`"));
         } else {
             state.save()?;
-            ui::hint("Resolve the conflicts manually, then run `rs restack` again.");
-            bail!(RsError::RebaseConflict(child_name.clone()));
+            ui::hint("Resolve the conflicts manually, then run `ez restack` again.");
+            bail!(EzError::RebaseConflict(child_name.clone()));
         }
     }
 

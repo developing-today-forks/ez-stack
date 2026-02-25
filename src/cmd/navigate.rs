@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
 use crate::ui;
@@ -11,7 +11,7 @@ pub fn up() -> Result<()> {
 
     let children = state.children_of(&current);
     if children.is_empty() {
-        bail!(RsError::AlreadyAtTop);
+        bail!(EzError::AlreadyAtTop);
     }
 
     let target = &children[0];
@@ -30,11 +30,11 @@ pub fn down() -> Result<()> {
     let current = git::current_branch()?;
 
     if state.is_trunk(&current) {
-        bail!(RsError::AlreadyAtBottom);
+        bail!(EzError::AlreadyAtBottom);
     }
 
     if !state.is_managed(&current) {
-        bail!(RsError::BranchNotInStack(current.clone()));
+        bail!(EzError::BranchNotInStack(current.clone()));
     }
 
     let parent = state.get_branch(&current)?.parent.clone();
@@ -54,7 +54,7 @@ pub fn top() -> Result<()> {
 
     let target = state.stack_top(&current);
     if target == current {
-        bail!(RsError::AlreadyAtTop);
+        bail!(EzError::AlreadyAtTop);
     }
 
     git::checkout(&target)?;
@@ -75,13 +75,13 @@ pub fn bottom() -> Result<()> {
         // On trunk: go to the first child (bottom of the stack).
         let children = state.children_of(&current);
         if children.is_empty() {
-            bail!(RsError::AlreadyAtBottom);
+            bail!(EzError::AlreadyAtBottom);
         }
         children[0].clone()
     } else {
         let bottom = state.stack_bottom(&current);
         if bottom == current {
-            bail!(RsError::AlreadyAtBottom);
+            bail!(EzError::AlreadyAtBottom);
         }
         bottom
     };

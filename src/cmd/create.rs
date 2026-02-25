@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
 use crate::ui;
@@ -10,19 +10,19 @@ pub fn run(name: &str, message: Option<&str>) -> Result<()> {
     let current = git::current_branch()?;
 
     if !state.is_trunk(&current) && !state.is_managed(&current) {
-        bail!(RsError::UserMessage(format!(
-            "current branch `{current}` is not tracked by rs — switch to a managed branch or trunk first"
+        bail!(EzError::UserMessage(format!(
+            "current branch `{current}` is not tracked by ez — switch to a managed branch or trunk first"
         )));
     }
 
     if git::branch_exists(name) {
-        bail!(RsError::BranchAlreadyExists(name.to_string()));
+        bail!(EzError::BranchAlreadyExists(name.to_string()));
     }
 
     // If a commit message was provided, stage and commit on the current branch first.
     if let Some(msg) = message {
         if !git::has_staged_changes()? {
-            bail!(RsError::NothingToCommit);
+            bail!(EzError::NothingToCommit);
         }
         git::commit(msg)?;
         ui::info(&format!("Committed on `{current}`: {msg}"));

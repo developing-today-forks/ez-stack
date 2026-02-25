@@ -1,7 +1,7 @@
 use anyhow::{Result, bail};
 
 use crate::cmd::push::push_or_update_pr;
-use crate::error::RsError;
+use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
 use crate::ui;
@@ -11,11 +11,11 @@ pub fn run(draft: bool) -> Result<()> {
     let current = git::current_branch()?;
 
     if state.is_trunk(&current) {
-        bail!(RsError::OnTrunk);
+        bail!(EzError::OnTrunk);
     }
 
     if !state.is_managed(&current) {
-        bail!(RsError::BranchNotInStack(current.clone()));
+        bail!(EzError::BranchNotInStack(current.clone()));
     }
 
     // path_to_trunk returns [current, ..., trunk].
