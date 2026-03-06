@@ -8,6 +8,7 @@ pub mod log;
 pub mod merge;
 pub mod move_branch;
 pub mod navigate;
+pub mod pr_edit;
 pub mod push;
 pub mod restack;
 pub mod status;

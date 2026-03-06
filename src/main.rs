@@ -45,5 +45,8 @@ fn run(cli: Cli) -> Result<()> {
         Commands::Delete { branch, force } => cmd::delete::run(branch.as_deref(), force),
         Commands::Move { onto } => cmd::move_branch::run(&onto),
         Commands::Merge { method } => cmd::merge::run(&method),
+        Commands::PrEdit { title, body, body_file } => {
+            cmd::pr_edit::run(title.as_deref(), body.as_deref(), body_file.as_deref())
+        }
     }
 }

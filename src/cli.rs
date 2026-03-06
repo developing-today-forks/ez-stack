@@ -153,4 +153,19 @@ pub enum Commands {
         #[arg(long, default_value = "squash")]
         method: String,
     },
+
+    /// Edit the PR for the current branch
+    PrEdit {
+        /// New PR title
+        #[arg(long)]
+        title: Option<String>,
+
+        /// New PR body text
+        #[arg(long)]
+        body: Option<String>,
+
+        /// New PR body from file
+        #[arg(long)]
+        body_file: Option<String>,
+    },
 }
