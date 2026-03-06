@@ -5,7 +5,7 @@ use crate::git;
 use crate::stack::StackState;
 use crate::ui;
 
-pub fn run(name: &str, message: Option<&str>) -> Result<()> {
+pub fn run(name: &str, message: Option<&str>, all: bool) -> Result<()> {
     let mut state = StackState::load()?;
     let current = git::current_branch()?;
 
@@ -23,6 +23,9 @@ pub fn run(name: &str, message: Option<&str>) -> Result<()> {
 
     // If a commit message was provided, stage and commit on the current branch first.
     if let Some(msg) = message {
+        if all {
+            git::add_all()?;
+        }
         if !git::has_staged_changes()? {
             ui::hint("Stage your changes first:  git add <files>");
             ui::hint(&format!("Or create the branch without committing:  ez create {name}"));

@@ -29,6 +29,10 @@ pub enum Commands {
         /// Commit staged changes with this message
         #[arg(short, long)]
         message: Option<String>,
+
+        /// Stage all tracked changes before committing (requires -m)
+        #[arg(short = 'a', long)]
+        all: bool,
     },
 
     /// Commit staged changes and auto-restack children

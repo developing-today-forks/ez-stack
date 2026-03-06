@@ -24,7 +24,7 @@ fn main() {
 fn run(cli: Cli) -> Result<()> {
     match cli.command {
         Commands::Init { trunk } => cmd::init::run(trunk),
-        Commands::Create { name, message } => cmd::create::run(&name, message.as_deref()),
+        Commands::Create { name, message, all } => cmd::create::run(&name, message.as_deref(), all),
         Commands::Commit { message, all } => cmd::commit::run(&message, all),
         Commands::Amend { message, all } => cmd::amend::run(message.as_deref(), all),
         Commands::Push { draft } => cmd::push::run(draft),
