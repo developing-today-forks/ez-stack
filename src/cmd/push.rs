@@ -90,11 +90,11 @@ pub fn push_or_update_pr(
                 .rev() // trunk-closest first
                 .map(|b| {
                     let pr_number = state.branches.get(b).and_then(|m| m.pr_number);
-                    let pr_url = pr_number.map(|n| {
+                    let pr_url = pr_number.and_then(|n| {
                         if repo.is_empty() {
-                            String::new()
+                            None
                         } else {
-                            format!("https://github.com/{}/pull/{}", repo, n)
+                            Some(format!("https://github.com/{}/pull/{}", repo, n))
                         }
                     });
                     crate::stack_body::AncestorPr {
