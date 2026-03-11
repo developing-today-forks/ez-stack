@@ -1,4 +1,5 @@
 use anyhow::{Context, Result, bail};
+use std::path::PathBuf;
 use std::process::Command;
 
 use crate::error::EzError;
@@ -212,6 +213,97 @@ pub fn stash_pop() -> Result<()> {
     Ok(())
 }
 
+/// Returns the path to the shared `.git` directory, even in linked worktrees.
+///
+/// `git rev-parse --git-common-dir` returns the common git dir but may give a
+/// relative path in the main worktree. We resolve relative paths against
+/// `--show-toplevel` (always absolute) to handle subdirectory invocations correctly.
+pub fn git_common_dir() -> Result<PathBuf> {
+    let out = run_git(&["rev-parse", "--git-common-dir"])?;
+    let p = PathBuf::from(&out);
+    if p.is_absolute() {
+        return Ok(p);
+    }
+    // Relative path (e.g., ".git") — resolve against the worktree root.
+    let root = run_git(&["rev-parse", "--show-toplevel"])?;
+    Ok(PathBuf::from(root).join(p))
+}
+
+/// Information about a single git worktree.
+#[derive(Debug, Clone)]
+pub struct WorktreeInfo {
+    /// Absolute path to the worktree root.
+    pub path: String,
+    /// The branch checked out in this worktree, or None if detached HEAD.
+    pub branch: Option<String>,
+}
+
+fn parse_worktree_list(output: &str) -> Vec<WorktreeInfo> {
+    let mut worktrees = Vec::new();
+    let mut current_path: Option<String> = None;
+    let mut current_branch: Option<String> = None;
+
+    for line in output.lines() {
+        if line.is_empty() {
+            if let Some(path) = current_path.take() {
+                worktrees.push(WorktreeInfo {
+                    path,
+                    branch: current_branch.take(),
+                });
+            }
+        } else if let Some(path) = line.strip_prefix("worktree ") {
+            current_path = Some(path.to_string());
+            current_branch = None;
+        } else if let Some(branch_ref) = line.strip_prefix("branch ") {
+            current_branch = branch_ref
+                .strip_prefix("refs/heads/")
+                .map(|s| s.to_string());
+        }
+        // Ignore HEAD sha, `detached`, `bare` lines — not needed.
+    }
+
+    // Handle last block — some git versions omit trailing blank line.
+    if let Some(path) = current_path {
+        worktrees.push(WorktreeInfo {
+            path,
+            branch: current_branch,
+        });
+    }
+
+    worktrees
+}
+
+/// Returns all git worktrees for this repository.
+pub fn worktree_list() -> Result<Vec<WorktreeInfo>> {
+    let output = run_git(&["worktree", "list", "--porcelain"])?;
+    Ok(parse_worktree_list(&output))
+}
+
+/// If `branch` is checked out in a worktree OTHER than `current_root`, returns that
+/// worktree's path. Returns Ok(None) if the branch is safe to rebase in this worktree.
+///
+/// `current_root` should come from `git::repo_root()` (the current worktree's --show-toplevel).
+pub fn branch_checked_out_elsewhere(branch: &str, current_root: &str) -> Result<Option<String>> {
+    let worktrees = worktree_list()?;
+    for wt in worktrees {
+        if wt.branch.as_deref() == Some(branch) && wt.path != current_root {
+            return Ok(Some(wt.path));
+        }
+    }
+    Ok(None)
+}
+
+/// Updates a local branch ref to match the remote WITHOUT checking it out.
+///
+/// Equivalent to `git fetch origin main:main`. This is different from `fetch_branch`
+/// (which only updates remote-tracking refs). This updates the local branch ref directly,
+/// so it works even when the branch is checked out in another worktree.
+pub fn fetch_refupdate(remote: &str, branch: &str) -> Result<()> {
+    let refspec = format!("{branch}:{branch}");
+    run_git(&["fetch", remote, &refspec])?;
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -222,5 +314,33 @@ mod tests {
         assert!(parse_porcelain_dirty("M  staged.rs\n"));
         assert!(!parse_porcelain_dirty(""));
         assert!(!parse_porcelain_dirty("\n"));
+    }
+
+    #[test]
+    fn test_parse_worktree_list_normal() {
+        let input = "worktree /repo/main\nHEAD abc123\nbranch refs/heads/main\n\nworktree /repo/feat-wt\nHEAD def456\nbranch refs/heads/feat/x\n\n";
+        let result = parse_worktree_list(input);
+        assert_eq!(result.len(), 2);
+        assert_eq!(result[0].path, "/repo/main");
+        assert_eq!(result[0].branch.as_deref(), Some("main"));
+        assert_eq!(result[1].path, "/repo/feat-wt");
+        assert_eq!(result[1].branch.as_deref(), Some("feat/x"));
+    }
+
+    #[test]
+    fn test_parse_worktree_list_detached() {
+        let input = "worktree /repo/detached\nHEAD abc123\ndetached\n\n";
+        let result = parse_worktree_list(input);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].branch, None);
+    }
+
+    #[test]
+    fn test_parse_worktree_list_no_trailing_newline() {
+        // Some git versions omit trailing blank line after last block.
+        let input = "worktree /repo/main\nHEAD abc123\nbranch refs/heads/main";
+        let result = parse_worktree_list(input);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].branch.as_deref(), Some("main"));
     }
 }
