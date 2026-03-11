@@ -32,7 +32,18 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
     let current_head = git::rev_parse("HEAD")?;
     let children = state.children_of(&current);
 
+    let current_root = git::repo_root()?;
+    let mut restacked_count = 0;
+
     for child_name in &children {
+        // Guard FIRST — before extracting old_parent_head.
+        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(child_name, &current_root) {
+            ui::info(&format!(
+                "`{child_name}` is in worktree `{wt_path}` — run `ez restack` there to update it"
+            ));
+            continue;
+        }
+
         let old_parent_head = state.get_branch(child_name)?.parent_head.clone();
 
         let sp = ui::spinner(&format!("Restacking `{child_name}`..."));
@@ -42,6 +53,7 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
         if ok {
             let child = state.get_branch_mut(child_name)?;
             child.parent_head = current_head.clone();
+            restacked_count += 1;
             ui::info(&format!("Restacked `{child_name}`"));
         } else {
             git::checkout(&current)?;
@@ -56,8 +68,7 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
 
     state.save()?;
     ui::success(&format!(
-        "Amended `{current}` and restacked {} child branch(es)",
-        children.len()
+        "Amended `{current}` and restacked {restacked_count} child branch(es)"
     ));
     Ok(())
 }

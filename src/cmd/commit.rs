@@ -37,21 +37,31 @@ pub fn run(message: &str, all: bool, if_changed: bool) -> Result<()> {
     let new_head = git::rev_parse("HEAD")?;
     let children = state.children_of(&current);
 
+    let current_root = git::repo_root()?;
+    let mut restacked_count = 0;
+
     for child in &children {
+        // Guard FIRST — before extracting old_base (avoids unused-variable warning when skipping).
+        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(child, &current_root) {
+            ui::info(&format!(
+                "`{child}` is in worktree `{wt_path}` — run `ez restack` there to update it"
+            ));
+            continue;
+        }
+
         let meta = state.get_branch(child)?;
         let old_base = meta.parent_head.clone();
 
         ui::info(&format!("Restacking `{child}` onto `{current}`..."));
         let ok = git::rebase_onto(&new_head, &old_base, child)?;
         if !ok {
-            // Checkout back to the branch we were on before reporting the conflict.
             git::checkout(&current)?;
             bail!(EzError::RebaseConflict(child.clone()));
         }
 
-        // Update the child's parent_head to reflect the new base.
         let meta = state.get_branch_mut(child)?;
         meta.parent_head = new_head.clone();
+        restacked_count += 1;
     }
 
     // After restacking we may be on a child branch; return to the original.
@@ -61,8 +71,8 @@ pub fn run(message: &str, all: bool, if_changed: bool) -> Result<()> {
 
     state.save()?;
 
-    if !children.is_empty() {
-        ui::success(&format!("Restacked {} child branch(es)", children.len()));
+    if restacked_count > 0 {
+        ui::success(&format!("Restacked {restacked_count} child branch(es)"));
     }
 
     Ok(())
