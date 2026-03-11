@@ -64,6 +64,22 @@ pub fn run(json: bool) -> Result<()> {
     }
 
     let current = git::current_branch()?;
+    let current_root = git::repo_root()?;
+
+    // Build map of branch → worktree_path for branches checked out in OTHER worktrees.
+    // Called once here so render_tree doesn't make O(n) subprocess calls.
+    let worktree_map: std::collections::HashMap<String, String> = git::worktree_list()
+        .unwrap_or_default()
+        .into_iter()
+        .filter_map(|wt| {
+            // Exclude the current worktree; exclude detached HEADs (no branch).
+            if wt.path != current_root {
+                wt.branch.map(|b| (b, wt.path))
+            } else {
+                None
+            }
+        })
+        .collect();
 
     ui::header("Stack");
 
@@ -76,7 +92,7 @@ pub fn run(json: bool) -> Result<()> {
     let count = children.len();
     for (i, child) in children.iter().enumerate() {
         let is_last = i == count - 1;
-        render_tree(&state, child, 1, is_last, &[], &current)?;
+        render_tree(&state, child, 1, is_last, &[], &current, &worktree_map)?;
     }
 
     Ok(())
@@ -89,12 +105,24 @@ fn render_tree(
     is_last: bool,
     ancestors_last: &[bool],
     current: &str,
+    worktree_map: &std::collections::HashMap<String, String>,
 ) -> Result<()> {
     let is_current = branch == current;
     let meta = state.get_branch(branch)?;
 
     // Build the display text for this branch
     let name_display = ui::branch_display(branch, is_current);
+
+    // Worktree indicator — shown when branch is checked out in another worktree.
+    let worktree_text = if let Some(wt_path) = worktree_map.get(branch) {
+        let label = std::path::Path::new(wt_path)
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or(wt_path.as_str());
+        format!(" {}", ui::dim(&format!("[wt: {label}]")))
+    } else {
+        String::new()
+    };
 
     // Get PR badge if available
     let pr_text = if let Some(pr_number) = meta.pr_number {
@@ -142,7 +170,8 @@ fn render_tree(
         String::new()
     };
 
-    let line_text = format!("{name_display}{pr_text}{ci_text}{commit_text}{current_marker}");
+    let line_text =
+        format!("{name_display}{worktree_text}{pr_text}{ci_text}{commit_text}{current_marker}");
     let line = ui::tree_line(depth, is_last, ancestors_last, &line_text);
     eprintln!("{line}");
 
@@ -160,6 +189,7 @@ fn render_tree(
             child_is_last,
             &child_ancestors,
             current,
+            worktree_map,
         )?;
     }
 
@@ -215,5 +245,35 @@ mod tests {
         let state = make_state();
         assert_eq!(state.children_of("feat/a"), vec!["feat/b"]);
         assert!(state.children_of("feat/b").is_empty());
+    }
+
+    #[test]
+    fn test_worktree_map_excludes_current_root() {
+        use std::collections::HashMap;
+
+        let current_root = "/repo/main";
+        let mock_worktrees: Vec<(String, Option<String>)> = vec![
+            ("/repo/main".to_string(), Some("main".to_string())),
+            ("/repo/feat-wt".to_string(), Some("feat/x".to_string())),
+            ("/repo/detached".to_string(), None),
+        ];
+
+        let map: HashMap<String, String> = mock_worktrees
+            .into_iter()
+            .filter_map(|(path, branch)| {
+                if path != current_root {
+                    branch.map(|b| (b, path))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        assert!(
+            !map.contains_key("main"),
+            "current root must not appear in map"
+        );
+        assert!(!map.contains_key(""), "detached worktrees must not appear");
+        assert_eq!(map.get("feat/x").map(String::as_str), Some("/repo/feat-wt"));
     }
 }
