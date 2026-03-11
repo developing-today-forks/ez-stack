@@ -73,6 +73,7 @@ pub fn run(dry_run: bool, autostash: bool) -> Result<()> {
 fn run_sync_inner() -> Result<()> {
     let mut state = StackState::load()?;
     let original_branch = git::current_branch()?;
+    let original_root = git::repo_root()?;
 
     // Fetch from remote.
     let sp = ui::spinner(&format!("Fetching from `{}`...", state.remote));
@@ -80,13 +81,13 @@ fn run_sync_inner() -> Result<()> {
     sp.finish_and_clear();
     ui::success(&format!("Fetched from `{}`", state.remote));
 
-    // Fast-forward trunk to match remote.
-    let remote_trunk = format!("{}/{}", state.remote, state.trunk);
-    git::checkout(&state.trunk)?;
-    if git::fast_forward_merge(&remote_trunk).is_err() {
-        ui::warn("Could not fast-forward trunk — you may have local commits");
-    } else {
-        ui::success(&format!("Updated `{}` to latest", state.trunk));
+    // Update trunk ref without checking it out — works even if trunk is in another worktree.
+    match git::fetch_refupdate(&state.remote, &state.trunk) {
+        Ok(()) => ui::success(&format!("Updated `{}` to latest", state.trunk)),
+        Err(_) => ui::warn(&format!(
+            "Could not update `{}` — it may have local commits that diverge from remote",
+            state.trunk
+        )),
     }
 
     // Detect merged PRs and clean up.
@@ -147,6 +148,14 @@ fn run_sync_inner() -> Result<()> {
             continue;
         }
 
+        // Guard: skip branches checked out in another worktree.
+        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(branch_name, &original_root) {
+            ui::warn(&format!(
+                "`{branch_name}` is checked out in worktree `{wt_path}` — skipping restack (run `ez restack` in that worktree)"
+            ));
+            continue;
+        }
+
         let sp = ui::spinner(&format!("Restacking `{branch_name}` onto `{parent}`..."));
         let ok = git::rebase_onto(&current_parent_tip, &stored_parent_head, branch_name)?;
         sp.finish_and_clear();
@@ -164,15 +173,21 @@ fn run_sync_inner() -> Result<()> {
         }
     }
 
-    // Return to original branch if it still exists, otherwise trunk.
+    // Return to original branch if it still exists.
+    // If it was cleaned up (merged), fall back to trunk — but trunk might be in another worktree.
     if git::branch_exists(&original_branch) {
         git::checkout(&original_branch)?;
     } else {
-        git::checkout(&state.trunk)?;
-        ui::info(&format!(
-            "Previous branch `{original_branch}` was cleaned up — switched to `{}`",
-            state.trunk
-        ));
+        match git::checkout(&state.trunk) {
+            Ok(()) => ui::info(&format!(
+                "Previous branch `{original_branch}` was cleaned up — switched to `{}`",
+                state.trunk
+            )),
+            Err(_) => ui::warn(&format!(
+                "Previous branch `{original_branch}` was cleaned up. Switch to another branch manually \
+                 (trunk may be checked out in another worktree)."
+            )),
+        }
     }
 
     state.save()?;
