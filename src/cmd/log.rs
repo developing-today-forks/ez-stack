@@ -5,8 +5,64 @@ use crate::github;
 use crate::stack::StackState;
 use crate::ui;
 
-pub fn run(_json: bool) -> Result<()> {
+pub fn run(json: bool) -> Result<()> {
     let state = StackState::load()?;
+
+    if json {
+        let order = state.topo_order();
+        let repo = github::repo_name().ok().unwrap_or_default();
+
+        let entries: Vec<serde_json::Value> = order
+            .iter()
+            .map(|branch| {
+                let meta = state.branches.get(branch).unwrap();
+                let children = state.children_of(branch);
+                let depth = state.path_to_trunk(branch).len().saturating_sub(1);
+
+                let (pr_number, pr_url, pr_state, is_draft) = match meta.pr_number {
+                    Some(n) => {
+                        let url = if repo.is_empty() {
+                            serde_json::Value::Null
+                        } else {
+                            serde_json::Value::String(format!("https://github.com/{repo}/pull/{n}"))
+                        };
+                        let (state_str, draft) = github::get_pr_status(branch)
+                            .ok()
+                            .flatten()
+                            .map(|pr| (pr.state, pr.is_draft))
+                            .unwrap_or_else(|| ("OPEN".to_string(), false));
+                        (
+                            serde_json::Value::Number(n.into()),
+                            url,
+                            serde_json::Value::String(state_str),
+                            draft,
+                        )
+                    }
+                    None => (
+                        serde_json::Value::Null,
+                        serde_json::Value::Null,
+                        serde_json::Value::Null,
+                        false,
+                    ),
+                };
+
+                serde_json::json!({
+                    "branch": branch,
+                    "parent": meta.parent,
+                    "depth": depth,
+                    "pr_number": pr_number,
+                    "pr_url": pr_url,
+                    "pr_state": pr_state,
+                    "is_draft": is_draft,
+                    "children": children,
+                })
+            })
+            .collect();
+
+        println!("{}", serde_json::json!(entries));
+        return Ok(());
+    }
+
     let current = git::current_branch()?;
 
     ui::header("Stack");
@@ -96,4 +152,56 @@ fn render_tree(
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::stack::{BranchMeta, StackState};
+    use std::collections::HashMap;
+
+    fn make_state() -> StackState {
+        let mut branches = HashMap::new();
+        branches.insert(
+            "feat/a".to_string(),
+            BranchMeta {
+                name: "feat/a".to_string(),
+                parent: "main".to_string(),
+                parent_head: "abc".to_string(),
+                pr_number: Some(1),
+            },
+        );
+        branches.insert(
+            "feat/b".to_string(),
+            BranchMeta {
+                name: "feat/b".to_string(),
+                parent: "feat/a".to_string(),
+                parent_head: "def".to_string(),
+                pr_number: None,
+            },
+        );
+        StackState {
+            trunk: "main".to_string(),
+            remote: "origin".to_string(),
+            branches,
+        }
+    }
+
+    #[test]
+    fn test_log_topo_order() {
+        let state = make_state();
+        let order = state.topo_order();
+        let idx_a = order.iter().position(|s| s == "feat/a").unwrap();
+        let idx_b = order.iter().position(|s| s == "feat/b").unwrap();
+        assert!(
+            idx_a < idx_b,
+            "feat/a (parent) must come before feat/b (child)"
+        );
+    }
+
+    #[test]
+    fn test_log_children_of() {
+        let state = make_state();
+        assert_eq!(state.children_of("feat/a"), vec!["feat/b"]);
+        assert!(state.children_of("feat/b").is_empty());
+    }
 }
