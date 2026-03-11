@@ -13,12 +13,34 @@ use anyhow::Result;
 use clap::Parser;
 use cli::{Cli, Commands};
 
+fn exit_code_for(e: &anyhow::Error) -> i32 {
+    use crate::error::EzError;
+    if let Some(ez) = e.downcast_ref::<EzError>() {
+        match ez {
+            EzError::GhError(_) => 2,
+            EzError::RebaseConflict(_) => 3,
+            EzError::StaleRemoteRef(_) => 4,
+            EzError::OnTrunk
+            | EzError::BranchNotInStack(_)
+            | EzError::AlreadyAtTop
+            | EzError::AlreadyAtBottom
+            | EzError::BranchAlreadyExists(_)
+            | EzError::AlreadyInitialized
+            | EzError::NotInitialized
+            | EzError::UserMessage(_) => 5,
+            EzError::NothingToCommit | EzError::UnstagedChanges => 6,
+            _ => 1,
+        }
+    } else {
+        1
+    }
+}
+
 fn main() {
     let cli = Cli::parse();
-
     if let Err(e) = run(cli) {
         ui::error(&format!("{e:#}"));
-        std::process::exit(1);
+        std::process::exit(exit_code_for(&e));
     }
 }
 
@@ -84,5 +106,28 @@ fn run(cli: Cli) -> Result<()> {
         Commands::Ready => cmd::draft::run(true),
         Commands::PrLink => cmd::pr_link::run(),
         Commands::Pr => cmd::pr_view::run(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::error::EzError;
+
+    #[test]
+    fn test_exit_codes() {
+        assert_eq!(
+            exit_code_for(&EzError::RebaseConflict("x".into()).into()),
+            3
+        );
+        assert_eq!(
+            exit_code_for(&EzError::StaleRemoteRef("x".into()).into()),
+            4
+        );
+        assert_eq!(exit_code_for(&EzError::OnTrunk.into()), 5);
+        assert_eq!(exit_code_for(&EzError::GhError("x".into()).into()), 2);
+        assert_eq!(exit_code_for(&EzError::NothingToCommit.into()), 6);
+        assert_eq!(exit_code_for(&EzError::UnstagedChanges.into()), 6);
+        assert_eq!(exit_code_for(&anyhow::anyhow!("generic")), 1);
     }
 }
