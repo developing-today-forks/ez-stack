@@ -53,6 +53,12 @@ pub fn create_branch(name: &str) -> Result<()> {
     Ok(())
 }
 
+/// Create a new branch at the tip of `base` without switching branches.
+pub fn create_branch_at(name: &str, base: &str) -> Result<()> {
+    run_git(&["branch", name, base])?;
+    Ok(())
+}
+
 pub fn checkout(branch: &str) -> Result<()> {
     run_git(&["checkout", branch])?;
     Ok(())

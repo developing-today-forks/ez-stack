@@ -5,26 +5,35 @@ use crate::git;
 use crate::stack::StackState;
 use crate::ui;
 
-pub fn run(name: &str, message: Option<&str>, all: bool, _from: Option<&str>) -> Result<()> {
+pub fn run(name: &str, message: Option<&str>, all: bool, from: Option<&str>) -> Result<()> {
     let mut state = StackState::load()?;
     let current = git::current_branch()?;
 
-    if !state.is_trunk(&current) && !state.is_managed(&current) {
-        bail!(EzError::UserMessage(format!(
-            "current branch `{current}` is not tracked by ez — switch to a managed branch or trunk first"
-        )));
-    }
+    // Determine the parent branch.
+    let parent = if let Some(base) = from {
+        if !state.is_trunk(base) && !state.is_managed(base) {
+            bail!(EzError::UserMessage(format!(
+                "branch `{base}` is not tracked by ez — use trunk or a managed branch with --from"
+            )));
+        }
+        base.to_string()
+    } else {
+        if !state.is_trunk(&current) && !state.is_managed(&current) {
+            bail!(EzError::UserMessage(format!(
+                "current branch `{current}` is not tracked by ez — switch to a managed branch or trunk first"
+            )));
+        }
+        current.clone()
+    };
 
     if git::branch_exists(name) {
-        ui::hint(&format!("Use `ez checkout {}` to switch to it", name));
-        ui::hint(&format!(
-            "Use `ez delete {}` to delete and recreate it",
-            name
-        ));
+        ui::hint(&format!("Use `ez checkout {name}` to switch to it"));
+        ui::hint(&format!("Use `ez delete {name}` to delete and recreate it"));
         bail!(EzError::BranchAlreadyExists(name.to_string()));
     }
 
-    // If a commit message was provided, stage and commit on the current branch first.
+    // If a commit message was provided (only without --from due to clap conflicts_with),
+    // stage and commit on the current branch first.
     if let Some(msg) = message {
         if all {
             git::add_all()?;
@@ -40,14 +49,59 @@ pub fn run(name: &str, message: Option<&str>, all: bool, _from: Option<&str>) ->
         ui::info(&format!("Committed on `{current}`: {msg}"));
     }
 
-    let parent_head = git::rev_parse("HEAD")?;
+    let parent_head = git::rev_parse(&parent)?;
 
-    git::create_branch(name)?;
+    if from.is_some() {
+        // Create at the tip of --from without switching branches.
+        git::create_branch_at(name, &parent_head)?;
+        state.add_branch(name, &parent, &parent_head);
+        state.save()?;
+        ui::success(&format!(
+            "Created branch `{name}` from `{parent}` (not checked out)"
+        ));
+        ui::hint(&format!("Run `ez checkout {name}` to switch to it"));
+    } else {
+        // Original behavior: create and switch.
+        git::create_branch(name)?;
+        state.add_branch(name, &parent, &parent_head);
+        state.save()?;
+        ui::success(&format!("Created branch `{name}` on top of `{parent}`"));
+    }
 
-    let parent = current;
-    state.add_branch(name, &parent, &parent_head);
-    state.save()?;
-
-    ui::success(&format!("Created branch `{name}` on top of `{parent}`"));
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::stack::{BranchMeta, StackState};
+    use std::collections::HashMap;
+
+    fn make_state() -> StackState {
+        let mut branches = HashMap::new();
+        branches.insert(
+            "feat/base".to_string(),
+            BranchMeta {
+                name: "feat/base".to_string(),
+                parent: "main".to_string(),
+                parent_head: "abc".to_string(),
+                pr_number: None,
+            },
+        );
+        StackState {
+            trunk: "main".to_string(),
+            remote: "origin".to_string(),
+            branches,
+        }
+    }
+
+    #[test]
+    fn test_from_valid_targets() {
+        let state = make_state();
+        // Both trunk and managed branches are valid --from targets
+        assert!(state.is_trunk("main"));
+        assert!(state.is_managed("feat/base"));
+        // Untracked branches are not valid
+        assert!(!state.is_managed("random-branch"));
+        assert!(!state.is_trunk("random-branch"));
+    }
 }
