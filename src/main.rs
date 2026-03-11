@@ -25,8 +25,17 @@ fn main() {
 fn run(cli: Cli) -> Result<()> {
     match cli.command {
         Commands::Init { trunk } => cmd::init::run(trunk),
-        Commands::Create { name, message, all } => cmd::create::run(&name, message.as_deref(), all),
-        Commands::Commit { message, all } => cmd::commit::run(&message, all),
+        Commands::Create {
+            name,
+            message,
+            all,
+            from,
+        } => cmd::create::run(&name, message.as_deref(), all, from.as_deref()),
+        Commands::Commit {
+            message,
+            all,
+            if_changed,
+        } => cmd::commit::run(&message, all, if_changed),
         Commands::Amend { message, all } => cmd::amend::run(message.as_deref(), all),
         Commands::Push {
             draft,
@@ -54,15 +63,15 @@ fn run(cli: Cli) -> Result<()> {
             body.as_deref(),
             body_file.as_deref(),
         ),
-        Commands::Sync { dry_run } => cmd::sync::run(dry_run),
+        Commands::Sync { dry_run, autostash } => cmd::sync::run(dry_run, autostash),
         Commands::Restack => cmd::restack::run(),
         Commands::Up => cmd::navigate::up(),
         Commands::Down => cmd::navigate::down(),
         Commands::Top => cmd::navigate::top(),
         Commands::Bottom => cmd::navigate::bottom(),
-        Commands::Checkout => cmd::checkout::run(),
-        Commands::Log => cmd::log::run(),
-        Commands::Status => cmd::status::run(),
+        Commands::Checkout { name } => cmd::checkout::run(name.as_deref()),
+        Commands::Log { json } => cmd::log::run(json),
+        Commands::Status { json } => cmd::status::run(json),
         Commands::Delete { branch, force } => cmd::delete::run(branch.as_deref(), force),
         Commands::Move { onto } => cmd::move_branch::run(&onto),
         Commands::Merge { method } => cmd::merge::run(&method),
@@ -71,5 +80,8 @@ fn run(cli: Cli) -> Result<()> {
             body,
             body_file,
         } => cmd::pr_edit::run(title.as_deref(), body.as_deref(), body_file.as_deref()),
+        Commands::Draft => cmd::draft::run(false),
+        Commands::Ready => cmd::draft::run(true),
+        Commands::PrLink => cmd::pr_link::run(),
     }
 }

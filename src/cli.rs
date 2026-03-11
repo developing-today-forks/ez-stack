@@ -33,6 +33,10 @@ pub enum Commands {
         /// Stage all tracked changes before committing (requires -m)
         #[arg(short = 'a', long, requires = "message")]
         all: bool,
+
+        /// Create the branch from this base instead of the current branch (cannot combine with -m)
+        #[arg(long, conflicts_with = "message")]
+        from: Option<String>,
     },
 
     /// Commit staged changes and auto-restack children
@@ -44,6 +48,10 @@ pub enum Commands {
         /// Stage all changes before committing
         #[arg(short, long)]
         all: bool,
+
+        /// No-op (exit 0) if there is nothing to commit
+        #[arg(long)]
+        if_changed: bool,
     },
 
     /// Amend the current commit and auto-restack children
@@ -108,6 +116,10 @@ pub enum Commands {
         /// Show what sync would do without making changes
         #[arg(long)]
         dry_run: bool,
+
+        /// Stash uncommitted changes before sync and restore after
+        #[arg(long)]
+        autostash: bool,
     },
 
     /// Rebase children onto the current branch tip
@@ -125,14 +137,25 @@ pub enum Commands {
     /// Move to the bottom of the stack (first branch above trunk)
     Bottom,
 
-    /// Interactively select a branch to check out
-    Checkout,
+    /// Switch to a branch by name or PR number (interactive if no argument)
+    Checkout {
+        /// Branch name or PR number to check out directly
+        name: Option<String>,
+    },
 
     /// Show the visual stack tree with PR status
-    Log,
+    Log {
+        /// Output stack as JSON to stdout
+        #[arg(long)]
+        json: bool,
+    },
 
     /// Show current branch info and stack position
-    Status,
+    Status {
+        /// Output status as JSON to stdout
+        #[arg(long)]
+        json: bool,
+    },
 
     /// Delete a branch and reparent its children
     Delete {
@@ -172,4 +195,13 @@ pub enum Commands {
         #[arg(long)]
         body_file: Option<String>,
     },
+
+    /// Mark the current branch's PR as a draft
+    Draft,
+
+    /// Mark the current branch's PR as ready for review
+    Ready,
+
+    /// Print the PR URL for the current branch to stdout
+    PrLink,
 }

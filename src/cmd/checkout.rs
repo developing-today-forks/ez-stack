@@ -6,7 +6,7 @@ use crate::github;
 use crate::stack::StackState;
 use crate::ui;
 
-pub fn run() -> Result<()> {
+pub fn run(_name: Option<&str>) -> Result<()> {
     let state = StackState::load()?;
     let current = git::current_branch()?;
 

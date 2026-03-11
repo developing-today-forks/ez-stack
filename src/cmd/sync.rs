@@ -5,7 +5,7 @@ use crate::github;
 use crate::stack::StackState;
 use crate::ui;
 
-pub fn run(dry_run: bool) -> Result<()> {
+pub fn run(dry_run: bool, _autostash: bool) -> Result<()> {
     let state = StackState::load()?;
 
     if dry_run {

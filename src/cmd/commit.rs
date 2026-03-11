@@ -5,7 +5,7 @@ use crate::git;
 use crate::stack::StackState;
 use crate::ui;
 
-pub fn run(message: &str, all: bool) -> Result<()> {
+pub fn run(message: &str, all: bool, _if_changed: bool) -> Result<()> {
     let mut state = StackState::load()?;
     let current = git::current_branch()?;
 
