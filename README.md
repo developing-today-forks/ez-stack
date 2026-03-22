@@ -59,6 +59,16 @@ That's it. Two PRs, correctly chained, with GitHub base branches set automatical
 - **Autostash** — `ez sync --autostash` eliminates the `git stash && ... && git stash pop` dance.
 - **Structured exit codes** — each failure mode has a distinct exit code (rebase conflict = 3, stale remote = 4, usage error = 5, unstaged changes = 6) so agents can take the right recovery action.
 
+### Install the ez skill
+
+If your agent supports Skills, install the repo's `ez-workflow` skill directly from GitHub:
+
+```bash
+npx skills add https://github.com/rohoswagger/ez-stack --skill ez-workflow
+```
+
+That installs the instructions from [`SKILL.md`](./SKILL.md), which teaches the agent when to use `ez` instead of raw `git`/`gh` commands in an `ez`-managed repo.
+
 ### Quick install check
 
 ```bash
@@ -85,7 +95,7 @@ open $(ez pr-link)
 ez log --json | jq '.[] | select(.needs_restack)'
 ```
 
-For Claude Code users, load `SKILL.md` via the Skill tool for a complete command reference and agent-specific usage patterns.
+For agents that support local instruction files, [`AGENTS.md`](./AGENTS.md) contains a compact install-and-usage guide. For skills-based agents, install `ez-workflow` with `npx skills add` and use that skill directly.
 
 ## Commands
 
