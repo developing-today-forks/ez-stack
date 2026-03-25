@@ -128,6 +128,7 @@ These features exist specifically to make ez useable by AI agents:
 | 0.1.11 | Agent CLI UX: `ez diff`/`ez diff --stat`/`ez diff --name-only`, `ez parent`, `ez commit -m "a" -m "b"` multi-line, `ez commit -- <paths>` path-scoped staging, diff stat after commit/amend, timing metadata on all output (`[ok \| 45ms]`), progressive help discovery (bare commands exit 0), actionable error hints on all errors, worktree filter fix (only `.worktrees/`) |
 | 0.1.12 | `ez update` — self-update command, auto-detects install method (cargo vs script), `--check` for version check without install, `--version` for specific version |
 | 0.1.13 | Examples in every `--help`, commit SHA in output, `ez worktree delete --yes` from inside worktree, `worktree_path` fix for linked worktrees |
+| 0.1.14 | Phased worktree create/delete: validate→mutate→output with rollback on failure; chdir before worktree remove; prune stale entries; recover from broken worktree state |
 
 ---
 

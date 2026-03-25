@@ -25,6 +25,8 @@ pub fn create(name: &str, from: Option<&str>) -> Result<()> {
     let mut state = StackState::load()?;
     let current = git::current_branch()?;
 
+    // --- Phase 1: Validate (no mutations) ---
+
     let parent = if let Some(base) = from {
         if !state.is_trunk(base) && !state.is_managed(base) {
             bail!(EzError::UserMessage(format!(
@@ -47,22 +49,28 @@ pub fn create(name: &str, from: Option<&str>) -> Result<()> {
     }
 
     let wt_path = worktree_path(name)?;
-
-    // Create branch at parent tip (without switching).
     let parent_head = git::rev_parse(&parent)?;
+
+    // --- Phase 2: Mutate (all-or-nothing) ---
+
     git::create_branch_at(name, &parent_head)?;
     state.add_branch(name, &parent, &parent_head);
 
-    // Create worktree checking out the new branch.
-    git::worktree_add(&wt_path, name)?;
+    if let Err(e) = git::worktree_add(&wt_path, name) {
+        // Rollback: remove the branch we just created.
+        let _ = git::delete_branch(name, true);
+        state.remove_branch(name);
+        return Err(e);
+    }
 
     state.save()?;
+
+    // --- Phase 3: Output ---
+
     ui::success(&format!(
         "Created branch `{name}` on top of `{parent}` in worktree `{wt_path}`"
     ));
     ui::hint(&format!("cd {wt_path}"));
-
-    // Machine output: print path to stdout so agents/scripts can `cd $(ez worktree create <name>)`.
     println!("{wt_path}");
 
     Ok(())
@@ -71,6 +79,8 @@ pub fn create(name: &str, from: Option<&str>) -> Result<()> {
 pub fn delete(name: &str, force: bool, yes: bool) -> Result<()> {
     let mut state = StackState::load()?;
 
+    // --- Phase 1: Gather all info and validate (no mutations) ---
+
     let repo_root = main_worktree_root()?;
     let wt_path = worktree_path(name)?;
     let current_dir = std::env::current_dir()
@@ -78,7 +88,6 @@ pub fn delete(name: &str, force: bool, yes: bool) -> Result<()> {
         .and_then(|p| p.to_str().map(String::from))
         .unwrap_or_default();
 
-    // Detect if we're currently inside the worktree being deleted.
     let inside_worktree = current_dir == wt_path || current_dir.starts_with(&format!("{wt_path}/"));
 
     if inside_worktree && !yes {
@@ -91,83 +100,126 @@ pub fn delete(name: &str, force: bool, yes: bool) -> Result<()> {
         }
     }
 
-    // Determine which branch is checked out in that worktree.
+    // Snapshot branch info from worktree list before any mutations.
     let branch = git::worktree_list()?
         .into_iter()
         .find(|wt| wt.path == wt_path)
         .and_then(|wt| wt.branch);
 
-    // Remove the worktree.
-    if std::path::Path::new(&wt_path).exists() {
+    // Pre-compute all stack changes so we can apply them atomically.
+    struct StackCleanup {
+        branch_name: String,
+        parent: String,
+        pr_number: Option<u64>,
+        parent_head_for_children: String,
+        children: Vec<String>,
+        child_prs: Vec<(String, Option<u64>)>,
+    }
+
+    let cleanup = if let Some(ref branch_name) = branch {
+        if state.is_managed(branch_name) {
+            let meta = state.get_branch(branch_name)?;
+            let parent = meta.parent.clone();
+            let pr_number = meta.pr_number;
+            let parent_head_for_children =
+                git::rev_parse(branch_name).unwrap_or_else(|_| meta.parent_head.clone());
+            let children = state.children_of(branch_name);
+            let child_prs: Vec<(String, Option<u64>)> = children
+                .iter()
+                .filter_map(|c| state.get_branch(c).ok().map(|m| (c.clone(), m.pr_number)))
+                .collect();
+            Some(StackCleanup {
+                branch_name: branch_name.clone(),
+                parent,
+                pr_number,
+                parent_head_for_children,
+                children,
+                child_prs,
+            })
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    // --- Phase 2: Mutate filesystem (the one step that can fail) ---
+
+    // Move out of the worktree before removing it.
+    if inside_worktree {
+        std::env::set_current_dir(&repo_root)?;
+    }
+
+    // Prune stale entries from previous failed deletes.
+    let _ = git::worktree_prune();
+
+    let wt_dir = std::path::Path::new(&wt_path);
+    if wt_dir.exists() && wt_dir.join(".git").exists() {
         let result = if force {
             git::worktree_remove_force(&wt_path)
         } else {
             git::worktree_remove(&wt_path)
         };
-        match result {
-            Ok(()) => ui::success(&format!("Removed worktree at `{wt_path}`")),
-            Err(e) => bail!(
+        if let Err(e) = result {
+            // Worktree removal failed — nothing else was changed. Bail cleanly.
+            bail!(
                 "Could not remove worktree at `{wt_path}`: {e}\n\
                  Use `ez worktree delete {name} --force` to discard uncommitted changes"
-            ),
+            );
         }
+        ui::success(&format!("Removed worktree at `{wt_path}`"));
+    } else if wt_dir.exists() {
+        let _ = std::fs::remove_dir_all(&wt_path);
+        ui::success(&format!("Cleaned up stale directory at `{wt_path}`"));
+    } else {
+        ui::info(&format!("Worktree directory already removed: `{wt_path}`"));
     }
 
-    // Clean up the branch from the stack if it was ez-managed.
-    if let Some(branch_name) = &branch {
-        if state.is_managed(branch_name) {
-            let meta = state.get_branch(branch_name)?;
-            let parent = meta.parent.clone();
-            let pr_number = meta.pr_number;
+    // --- Phase 3: Mutate stack state (atomic — only runs after worktree is gone) ---
 
-            let parent_head_for_children =
-                git::rev_parse(branch_name).unwrap_or_else(|_| meta.parent_head.clone());
-
-            let children = state.children_of(branch_name);
-            for child_name in &children {
-                let child = state.get_branch_mut(child_name)?;
-                child.parent = parent.clone();
-                child.parent_head = parent_head_for_children.clone();
-                ui::info(&format!("Reparented `{child_name}` onto `{parent}`"));
+    if let Some(c) = cleanup {
+        // Reparent children in state.
+        for child_name in &c.children {
+            if let Ok(child) = state.get_branch_mut(child_name) {
+                child.parent = c.parent.clone();
+                child.parent_head = c.parent_head_for_children.clone();
             }
+            ui::info(&format!("Reparented `{child_name}` onto `{}`", c.parent));
+        }
 
-            if pr_number.is_some() {
-                for child_name in &children {
-                    let child = state.get_branch(child_name)?;
-                    if let Some(child_pr) = child.pr_number
-                        && let Err(e) = github::update_pr_base(child_pr, &parent)
-                    {
+        // Update PR bases on GitHub (best-effort, don't fail the command).
+        if c.pr_number.is_some() {
+            for (child_name, child_pr) in &c.child_prs {
+                if let Some(pr) = child_pr {
+                    if let Err(e) = github::update_pr_base(*pr, &c.parent) {
                         ui::warn(&format!("Failed to update PR base for `{child_name}`: {e}"));
                     }
                 }
             }
-
-            state.remove_branch(branch_name);
-
-            // Delete the local branch (force, since the worktree is already gone).
-            let _ = git::delete_branch(branch_name, true);
-
-            state.save()?;
-            ui::success(&format!("Deleted branch `{branch_name}`"));
-
-            if !children.is_empty() {
-                ui::hint(&format!(
-                    "Run `ez restack` to rebase reparented branches onto `{parent}`"
-                ));
-            }
-        } else {
-            // Branch exists but isn't ez-managed — just delete it.
-            let _ = git::delete_branch(branch_name, force);
-            state.save()?;
         }
+
+        state.remove_branch(&c.branch_name);
+        let _ = git::delete_branch(&c.branch_name, true);
+        state.save()?;
+
+        ui::success(&format!("Deleted branch `{}`", c.branch_name));
+
+        if !c.children.is_empty() {
+            ui::hint(&format!(
+                "Run `ez restack` to rebase reparented branches onto `{}`",
+                c.parent
+            ));
+        }
+    } else if let Some(branch_name) = &branch {
+        // Branch exists but isn't ez-managed — just delete it.
+        let _ = git::delete_branch(branch_name, force);
+        state.save()?;
     } else {
         state.save()?;
     }
 
-    let _ = git::worktree_prune();
+    // --- Phase 4: Output ---
 
-    // If we were inside the deleted worktree, print repo root to stdout
-    // so the caller can `cd $(ez worktree delete <name> --yes)`.
     if inside_worktree {
         ui::hint(&format!("cd {repo_root}"));
         println!("{repo_root}");
