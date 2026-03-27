@@ -3,7 +3,6 @@ use std::collections::HashMap;
 
 use crate::git;
 use crate::stack::StackState;
-use crate::ui;
 
 pub fn run() -> Result<()> {
     let state = StackState::load()?;
@@ -25,7 +24,7 @@ pub fn run() -> Result<()> {
         let pr = meta.pr_number.map(|n| format!(" #{n}")).unwrap_or_default();
         let wt = worktree_map
             .get(branch.as_str())
-            .map(|p| format!(" {}", ui::dim(p)))
+            .map(|p| format!(" {p}"))
             .unwrap_or_default();
 
         // Machine-readable to stdout: marker, name, PR, worktree path.

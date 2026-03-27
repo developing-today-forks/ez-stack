@@ -16,7 +16,9 @@ pub fn run() -> Result<()> {
 
     let meta = state.get_branch(&current)?;
     if meta.pr_number.is_none() {
-        anyhow::bail!("No PR found for `{current}` — run `ez push` to create one first");
+        bail!(EzError::UserMessage(format!(
+            "No PR found for `{current}` — run `ez push` to create one first"
+        )));
     }
 
     ui::info(&format!("Opening PR for `{current}` in browser..."));

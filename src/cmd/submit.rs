@@ -67,6 +67,15 @@ pub fn run(
             resolved_body.as_deref(),
             body_explicitly_set,
         )?;
+
+        let pr_number = state.get_branch(branch).ok().and_then(|m| m.pr_number);
+        ui::receipt(&serde_json::json!({
+            "cmd": "submit",
+            "branch": branch,
+            "pr_number": pr_number,
+            "pr_url": pr_url,
+        }));
+
         pr_urls.push((branch.clone(), pr_url));
     }
 

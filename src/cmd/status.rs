@@ -1,5 +1,6 @@
 use anyhow::Result;
 
+use crate::error::EzError;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
@@ -33,7 +34,7 @@ pub fn run(json: bool) -> Result<()> {
         }
 
         if !state.is_managed(&current) {
-            anyhow::bail!("Branch `{current}` is not tracked by ez.");
+            anyhow::bail!(EzError::BranchNotInStack(current.clone()));
         }
 
         let meta = state.get_branch(&current)?;

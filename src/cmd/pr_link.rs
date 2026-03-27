@@ -15,7 +15,9 @@ pub fn run() -> Result<()> {
 
     let meta = state.get_branch(&current)?;
     let pr_number = meta.pr_number.ok_or_else(|| {
-        anyhow::anyhow!("No PR found for `{current}` — run `ez push` to create one first")
+        EzError::UserMessage(format!(
+            "No PR found for `{current}` — run `ez push` to create one first"
+        ))
     })?;
 
     // Try to construct URL from repo name (fast, no extra API call).
@@ -24,7 +26,7 @@ pub fn run() -> Result<()> {
     } else {
         // Fall back to gh API.
         github::get_pr_status(&current)?
-            .ok_or_else(|| anyhow::anyhow!("Could not find PR #{pr_number}"))?
+            .ok_or_else(|| EzError::UserMessage(format!("Could not find PR #{pr_number}")))?
             .url
     };
 

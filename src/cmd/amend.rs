@@ -22,7 +22,9 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
     }
 
     if !all && !git::has_staged_changes()? {
-        bail!(EzError::NothingToCommit);
+        bail!(EzError::UserMessage(
+            "no staged changes to amend\n  → Stage files with `git add <files>`, or use `ez amend -a` to stage all".to_string()
+        ));
     }
 
     let before = git::rev_parse("HEAD")?;

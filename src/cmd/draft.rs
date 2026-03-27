@@ -21,7 +21,9 @@ pub fn run(ready: bool) -> Result<()> {
 
     let meta = state.get_branch(&current)?;
     let pr_number = meta.pr_number.ok_or_else(|| {
-        anyhow::anyhow!("No PR found for `{current}` — run `ez push` to create one first")
+        EzError::UserMessage(format!(
+            "No PR found for `{current}` — run `ez push` to create one first"
+        ))
     })?;
 
     github::set_pr_ready(pr_number, ready)?;

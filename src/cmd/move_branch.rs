@@ -41,6 +41,7 @@ pub fn run(onto: &str) -> Result<()> {
     }
 
     let meta = state.get_branch(&current)?;
+    let old_parent = meta.parent.clone();
     let old_parent_head = meta.parent_head.clone();
     let pr_number = meta.pr_number;
 
@@ -118,6 +119,13 @@ pub fn run(onto: &str) -> Result<()> {
     if restacked > 0 {
         ui::info(&format!("Restacked {restacked} child branch(es)"));
     }
+
+    ui::receipt(&serde_json::json!({
+        "cmd": "move",
+        "branch": current,
+        "from": old_parent,
+        "onto": onto,
+    }));
 
     Ok(())
 }

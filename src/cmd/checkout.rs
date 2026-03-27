@@ -2,6 +2,7 @@ use anyhow::Result;
 use dialoguer::Select;
 use std::collections::HashMap;
 
+use crate::error::EzError;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
@@ -44,15 +45,13 @@ pub fn run(name: Option<&str>) -> Result<()> {
                 .find(|m| m.pr_number == Some(pr_num))
                 .map(|m| m.name.clone())
                 .ok_or_else(|| {
-                    anyhow::anyhow!(
+                    EzError::UserMessage(format!(
                         "No branch found with PR #{pr_num}\n  → Run `ez branch` to see all branches"
-                    )
+                    ))
                 })?
         } else {
             if !state.is_trunk(arg) && !state.is_managed(arg) {
-                anyhow::bail!(
-                    "Branch `{arg}` is not tracked by ez\n  → Run `ez branch` to see all branches"
-                );
+                anyhow::bail!(EzError::BranchNotInStack(arg.to_string()));
             }
             arg.to_string()
         };

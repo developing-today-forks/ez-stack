@@ -157,5 +157,12 @@ pub fn run(method: &str) -> Result<()> {
     }
     ui::success("Merge complete");
 
+    ui::receipt(&serde_json::json!({
+        "cmd": "merge",
+        "branch": bottom,
+        "pr_number": pr_number,
+        "method": method,
+    }));
+
     Ok(())
 }

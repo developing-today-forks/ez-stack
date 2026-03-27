@@ -20,6 +20,14 @@ pub fn run(branch: Option<&str>, force: bool) -> Result<()> {
         bail!(EzError::BranchNotInStack(target.clone()));
     }
 
+    // Worktree guard: if the target branch is checked out in another worktree, bail.
+    let current_root = git::repo_root()?;
+    if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(&target, &current_root) {
+        bail!(EzError::UserMessage(format!(
+            "branch `{target}` is checked out in worktree `{wt_path}`\n  → Run `ez worktree delete {target}` to remove it first"
+        )));
+    }
+
     let meta = state.get_branch(&target)?;
     let parent = meta.parent.clone();
     let pr_number = meta.pr_number;
@@ -50,15 +58,12 @@ pub fn run(branch: Option<&str>, force: bool) -> Result<()> {
         }
     }
 
-    // Remove the target from stack state.
-    state.remove_branch(&target);
-
     // If currently on the target branch, checkout parent first.
     if current == target {
         git::checkout(&parent)?;
     }
 
-    // Delete local branch.
+    // Delete local branch (BEFORE removing from state, so state isn't corrupted on failure).
     if git::branch_exists(&target)
         && let Err(e) = git::delete_branch(&target, force)
     {
@@ -76,13 +81,23 @@ pub fn run(branch: Option<&str>, force: bool) -> Result<()> {
     // Try to delete remote branch (ignore errors).
     let _ = git::delete_remote_branch(&state.remote, &target);
 
+    // Remove from state only after git operations succeeded.
+    state.remove_branch(&target);
     state.save()?;
+
     ui::success(&format!("Deleted branch `{target}`"));
     if !children.is_empty() {
         ui::hint(&format!(
             "Run `ez restack` to rebase reparented branches onto `{parent}`"
         ));
     }
+
+    ui::receipt(&serde_json::json!({
+        "cmd": "delete",
+        "branch": target,
+        "parent": parent,
+        "reparented_children": children.len(),
+    }));
 
     Ok(())
 }

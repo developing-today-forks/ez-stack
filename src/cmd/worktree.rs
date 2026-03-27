@@ -71,6 +71,14 @@ pub fn create(name: &str, from: Option<&str>) -> Result<()> {
         "Created branch `{name}` on top of `{parent}` in worktree `{wt_path}`"
     ));
     ui::hint(&format!("cd {wt_path}"));
+
+    ui::receipt(&serde_json::json!({
+        "cmd": "worktree_create",
+        "branch": name,
+        "parent": parent,
+        "worktree_path": wt_path,
+    }));
+
     println!("{wt_path}");
 
     Ok(())
@@ -210,12 +218,30 @@ pub fn delete(name: &str, force: bool, yes: bool) -> Result<()> {
                 c.parent
             ));
         }
+
+        ui::receipt(&serde_json::json!({
+            "cmd": "worktree_delete",
+            "branch": c.branch_name,
+            "worktree_path": wt_path,
+        }));
     } else if let Some(branch_name) = &branch {
         // Branch exists but isn't ez-managed — just delete it.
         let _ = git::delete_branch(branch_name, force);
         state.save()?;
+
+        ui::receipt(&serde_json::json!({
+            "cmd": "worktree_delete",
+            "branch": branch_name,
+            "worktree_path": wt_path,
+        }));
     } else {
         state.save()?;
+
+        ui::receipt(&serde_json::json!({
+            "cmd": "worktree_delete",
+            "branch": serde_json::Value::Null,
+            "worktree_path": wt_path,
+        }));
     }
 
     // --- Phase 4: Output ---
@@ -240,7 +266,7 @@ pub fn list() -> Result<()> {
             .and_then(|n| n.to_str())
             .unwrap_or(&wt.path);
         let branch = wt.branch.as_deref().unwrap_or("(detached HEAD)");
-        eprintln!("{:<30} {}  {}", name, ui::dim(branch), ui::dim(&wt.path));
+        println!("{:<30} {}  {}", name, branch, &wt.path);
     }
     Ok(())
 }
