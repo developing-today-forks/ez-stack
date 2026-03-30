@@ -12,6 +12,7 @@ pub fn run(
     all: bool,
     from: Option<&str>,
     no_worktree: bool,
+    hook: Option<&str>,
 ) -> Result<()> {
     let mut state = StackState::load()?;
     let current = git::current_branch()?;
@@ -83,8 +84,8 @@ pub fn run(
         ));
         ui::hint(&format!("cd {wt_path}"));
 
-        // Run post-create hook in the new worktree.
-        hooks::run_hook("post-create", &wt_path, name, &parent, &wt_path);
+        // Emit post-create hook instructions for the agent.
+        hooks::emit_hook("post-create", hook);
 
         ui::receipt(&serde_json::json!({
             "cmd": "create",

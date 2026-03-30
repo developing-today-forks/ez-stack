@@ -46,7 +46,9 @@ cd $(ez create my-task --from main)
 
 **Always use `--from main`** for independent tasks. Without it, ez stacks on the current branch.
 
-**Hooks:** If `.ez/hooks/post-create` exists in the repo, it runs automatically in the new worktree after creation. Use this for `npm install`, copying `.env`, starting dev servers, etc.
+**Hooks:** If `.ez/hooks/post-create/default.md` exists in the repo, ez prints its instructions after worktree creation. Follow them to set up the worktree (install deps, copy env, etc.). Use `--hook <name>` for a specific hook: `ez create feat/auth --hook setup-node` reads `.ez/hooks/post-create/setup-node.md`.
+
+Hooks are markdown instructions for agents, not executable scripts. ez prints them, you follow them.
 
 ## Working
 

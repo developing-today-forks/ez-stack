@@ -114,7 +114,15 @@ fn run(cli: Cli) -> Result<()> {
             all,
             from,
             no_worktree,
-        } => cmd::create::run(&name, message.as_deref(), all, from.as_deref(), no_worktree),
+            hook,
+        } => cmd::create::run(
+            &name,
+            message.as_deref(),
+            all,
+            from.as_deref(),
+            no_worktree,
+            hook.as_deref(),
+        ),
         Commands::Commit {
             message,
             all,

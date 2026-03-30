@@ -30,6 +30,7 @@ Examples:
     #[command(after_help = "\
 Examples:
   ez create feat/auth
+  ez create feat/auth --hook setup-node
   ez create feat/auth -m \"add auth types\"
   ez create feat/auth -am \"add auth types\"
   ez create feat/auth --from main
@@ -53,6 +54,10 @@ Examples:
         /// Create a branch only (no worktree)
         #[arg(long)]
         no_worktree: bool,
+
+        /// Run a specific post-create hook (from .ez/hooks/post-create/<name>.md)
+        #[arg(long)]
+        hook: Option<String>,
     },
 
     /// Commit staged changes and auto-restack children
