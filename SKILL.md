@@ -46,6 +46,8 @@ cd $(ez create my-task --from main)
 
 **Always use `--from main`** for independent tasks. Without it, ez stacks on the current branch.
 
+**Hooks:** If `.ez/hooks/post-create` exists in the repo, it runs automatically in the new worktree after creation. Use this for `npm install`, copying `.env`, starting dev servers, etc.
+
 ## Working
 
 ### Commit specific files (keeps changes focused)

@@ -5,6 +5,7 @@ mod error;
 mod git;
 #[allow(dead_code)]
 mod github;
+mod hooks;
 mod stack;
 mod stack_body;
 mod ui;

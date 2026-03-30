@@ -144,6 +144,7 @@ These features exist specifically to make ez useable by AI agents:
 | 0.1.26 | Fix `ez branch` to show trunk, all managed branches, and current branch even if untracked; hint when current branch was created outside ez |
 | 0.1.27 | Fix `-a` flag to use `git add -u` (tracked only, not untracked); hook failure detection (shows which files pre-commit hooks modified); push error messages wrapped with context; `ez status` shows working tree (staged/modified/untracked counts); SKILL.md discoverability improvements |
 | 0.2.0 | Flagship command redesign: `ez create` defaults to worktree (`--no-worktree` for old behavior); `ez list` replaces `ez branch` (adds `--json`, working tree state, worktree paths); `ez delete` auto-detects and removes worktrees; `ez push -am "msg"` for stage+commit+push; `ez worktree create/delete/list` become aliases |
+| 0.2.1 | Worktree hooks: `.ez/hooks/post-create` runs automatically in new worktrees (npm install, .env copy, dev server, etc.). Env vars: EZ_BRANCH, EZ_WORKTREE, EZ_PARENT. Failures warn, don't abort. |
 
 ---
 

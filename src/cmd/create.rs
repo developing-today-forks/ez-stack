@@ -2,6 +2,7 @@ use anyhow::{Result, bail};
 
 use crate::error::EzError;
 use crate::git;
+use crate::hooks;
 use crate::stack::StackState;
 use crate::ui;
 
@@ -81,6 +82,9 @@ pub fn run(
             "Created branch `{name}` on top of `{parent}` in worktree `{wt_path}`"
         ));
         ui::hint(&format!("cd {wt_path}"));
+
+        // Run post-create hook in the new worktree.
+        hooks::run_hook("post-create", &wt_path, name, &parent, &wt_path);
 
         ui::receipt(&serde_json::json!({
             "cmd": "create",
