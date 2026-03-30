@@ -29,8 +29,6 @@ pub fn install() -> Result<()> {
         ui::success("Installed ez-workflow skill");
     }
 
-    ui::hint(&format!("Skill installed at {}", skill_path.display()));
-
     // Machine output: path to stdout.
     println!("{}", skill_path.display());
 

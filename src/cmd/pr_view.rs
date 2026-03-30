@@ -21,7 +21,7 @@ pub fn run() -> Result<()> {
         )));
     }
 
-    ui::info(&format!("Opening PR for `{current}` in browser..."));
+    ui::success(&format!("Opened PR for `{current}`"));
     github::open_pr_in_browser(&current)?;
     Ok(())
 }

@@ -101,17 +101,15 @@ pub fn run(message: &str, all: bool, if_changed: bool, paths: &[String]) -> Resu
 
     for child in &children {
         // Guard FIRST — before extracting old_base (avoids unused-variable warning when skipping).
-        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(child, &current_root) {
-            ui::info(&format!(
-                "`{child}` is in worktree `{wt_path}` — run `ez restack` there to update it"
-            ));
+        if let Ok(Some(_wt_path)) = git::branch_checked_out_elsewhere(child, &current_root) {
+            ui::info(&format!("Skipped `{child}` (in worktree)"));
             continue;
         }
 
         let meta = state.get_branch(child)?;
         let old_base = meta.parent_head.clone();
 
-        ui::info(&format!("Restacking `{child}` onto `{current}`..."));
+        ui::info(&format!("Restacking `{child}`..."));
         let ok = git::rebase_onto(&new_head, &old_base, child)?;
         if !ok {
             // Save progress so the user can fix conflicts and continue with `ez restack`.
@@ -134,7 +132,7 @@ pub fn run(message: &str, all: bool, if_changed: bool, paths: &[String]) -> Resu
     state.save()?;
 
     if restacked_count > 0 {
-        ui::success(&format!("Restacked {restacked_count} child branch(es)"));
+        ui::info(&format!("Restacked {restacked_count} child branch(es)"));
     }
 
     Ok(())

@@ -178,7 +178,7 @@ pub fn run(json: bool) -> Result<()> {
                     pr.state.clone()
                 };
                 ui::info(&format!("PR: {badge} {state_label} — {}", pr.title));
-                ui::hint(&pr.url);
+                ui::info(&format!("  {}", pr.url));
             }
             _ => {
                 ui::info(&format!("PR: {}", ui::pr_badge(pr_number, "OPEN", false)));

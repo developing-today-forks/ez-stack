@@ -89,7 +89,7 @@ fn run_sync_inner(force: bool) -> Result<()> {
     let sp = ui::spinner(&format!("Fetching from `{}`...", state.remote));
     git::fetch(&state.remote)?;
     sp.finish_and_clear();
-    ui::success(&format!("Fetched from `{}`", state.remote));
+    ui::info(&format!("Fetched from `{}`", state.remote));
 
     // Update trunk to latest. git fetch above already refreshed origin/<trunk>.
     // Only attempt to fast-forward local trunk when it is strictly behind the remote-tracking
@@ -102,13 +102,13 @@ fn run_sync_inner(force: bool) -> Result<()> {
             // Currently on trunk: fast-forward via merge (fetch refupdate won't update HEAD).
             let remote_ref = format!("{}/{}", state.remote, state.trunk);
             match git::fast_forward_merge(&remote_ref) {
-                Ok(()) => ui::success(&format!("Updated `{}` to latest", state.trunk)),
+                Ok(()) => ui::info(&format!("Updated `{}` to latest", state.trunk)),
                 Err(e) => ui::warn(&format!("Could not update `{}` — {e}", state.trunk)),
             }
         } else {
             // Not on trunk: update ref directly without checkout.
             match git::fetch_refupdate(&state.remote, &state.trunk) {
-                Ok(()) => ui::success(&format!("Updated `{}` to latest", state.trunk)),
+                Ok(()) => ui::info(&format!("Updated `{}` to latest", state.trunk)),
                 Err(e) => ui::warn(&format!("Could not update `{}` — {e}", state.trunk)),
             }
         }
@@ -144,9 +144,7 @@ fn run_sync_inner(force: bool) -> Result<()> {
                 }
             }
             state.remove_branch(branch_name);
-            ui::success(&format!(
-                "Cleaned up `{branch_name}` (branch no longer exists locally)"
-            ));
+            ui::info(&format!("Cleaned up `{branch_name}` (deleted outside ez)"));
             cleaned.push(branch_name.clone());
             continue;
         }
@@ -209,7 +207,7 @@ fn run_sync_inner(force: bool) -> Result<()> {
                 git::worktree_remove(wt_path)
             };
             match result {
-                Ok(()) => ui::success(&format!("Removed worktree at `{wt_path}`")),
+                Ok(()) => ui::info(&format!("Removed worktree at `{wt_path}`")),
                 Err(e) => ui::warn(&format!(
                     "Could not remove worktree at `{wt_path}`: {e}\n  Hint: use `ez sync --force` to discard uncommitted changes"
                 )),
@@ -224,7 +222,7 @@ fn run_sync_inner(force: bool) -> Result<()> {
         // Delete local branch (ignore errors if already gone).
         let _ = git::delete_branch(branch_name, true);
 
-        ui::success(&format!("Cleaned up merged branch: `{branch_name}`"));
+        ui::info(&format!("Cleaned up `{branch_name}` (merged)"));
         ui::receipt(&serde_json::json!({
             "cmd": "sync",
             "branch": branch_name,
@@ -255,10 +253,8 @@ fn run_sync_inner(force: bool) -> Result<()> {
         }
 
         // Guard: skip branches checked out in another worktree.
-        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(branch_name, &original_root) {
-            ui::warn(&format!(
-                "`{branch_name}` is checked out in worktree `{wt_path}` — skipping restack (run `ez restack` in that worktree)"
-            ));
+        if let Ok(Some(_wt_path)) = git::branch_checked_out_elsewhere(branch_name, &original_root) {
+            ui::warn(&format!("Skipped `{branch_name}` (in worktree)"));
             continue;
         }
 
@@ -272,7 +268,7 @@ fn run_sync_inner(force: bool) -> Result<()> {
             let meta = state.get_branch_mut(branch_name)?;
             meta.parent_head = current_parent_tip;
             restacked += 1;
-            ui::success(&format!("Restacked `{branch_name}` onto `{parent}`"));
+            ui::info(&format!("Restacked `{branch_name}` onto `{parent}`"));
 
             // Post-restack: detect and auto-drop redundant commits.
             let mut redundant_count: u64 = 0;
@@ -285,9 +281,7 @@ fn run_sync_inner(force: bool) -> Result<()> {
                     ));
                     match git::rebase(&parent, branch_name) {
                         Ok(true) => {
-                            ui::success(&format!(
-                                "Cleaned up `{branch_name}` — dropped redundant commits"
-                            ));
+                            ui::info(&format!("Dropped redundant commits from `{branch_name}`"));
                         }
                         Ok(false) => {
                             ui::warn(&format!(
@@ -345,6 +339,12 @@ fn run_sync_inner(force: bool) -> Result<()> {
 
     if cleaned.is_empty() && restacked == 0 {
         ui::info("Everything is up to date");
+    } else {
+        ui::success(&format!(
+            "Synced ({} cleaned, {} restacked)",
+            cleaned.len(),
+            restacked
+        ));
     }
 
     // Prune stale worktree admin entries.

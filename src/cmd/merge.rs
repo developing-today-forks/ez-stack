@@ -46,7 +46,7 @@ pub fn run(method: &str) -> Result<()> {
     let sp = ui::spinner(&format!("Merging PR #{pr_number}..."));
     github::merge_pr(pr_number, method)?;
     sp.finish_and_clear();
-    ui::success(&format!("Merged PR #{pr_number} for `{bottom}`"));
+    ui::info(&format!("Merged PR #{pr_number} for `{bottom}`"));
 
     // Reparent children of the merged branch to trunk.
     let children = state.children_of(&bottom);
@@ -114,10 +114,8 @@ pub fn run(method: &str) -> Result<()> {
             continue;
         }
 
-        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(branch_name, &current_root) {
-            ui::warn(&format!(
-                "`{branch_name}` is checked out in worktree `{wt_path}` — skipping restack (run `ez restack` in that worktree)"
-            ));
+        if let Ok(Some(_wt_path)) = git::branch_checked_out_elsewhere(branch_name, &current_root) {
+            ui::warn(&format!("Skipped `{branch_name}` (in worktree)"));
             continue;
         }
 
@@ -129,7 +127,7 @@ pub fn run(method: &str) -> Result<()> {
             let meta = state.get_branch_mut(branch_name)?;
             meta.parent_head = current_parent_tip;
             restacked += 1;
-            ui::success(&format!("Restacked `{branch_name}` onto `{parent}`"));
+            ui::info(&format!("Restacked `{branch_name}` onto `{parent}`"));
         } else {
             state.save()?;
             ui::error(&format!("Conflict while restacking `{branch_name}`"));

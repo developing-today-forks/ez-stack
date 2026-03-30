@@ -80,10 +80,8 @@ pub fn run(onto: &str) -> Result<()> {
     let current_root = git::repo_root()?;
 
     for child_name in &children {
-        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(child_name, &current_root) {
-            ui::warn(&format!(
-                "`{child_name}` is checked out in worktree `{wt_path}` — skipping restack (run `ez restack` in that worktree)"
-            ));
+        if let Ok(Some(_wt_path)) = git::branch_checked_out_elsewhere(child_name, &current_root) {
+            ui::warn(&format!("Skipped `{child_name}` (in worktree)"));
             continue;
         }
 
@@ -102,7 +100,7 @@ pub fn run(onto: &str) -> Result<()> {
             let child = state.get_branch_mut(child_name)?;
             child.parent_head = new_tip.clone();
             restacked += 1;
-            ui::success(&format!("Restacked `{child_name}` onto `{current}`"));
+            ui::info(&format!("Restacked `{child_name}` onto `{current}`"));
         } else {
             state.save()?;
             ui::hint("Resolve the conflicts manually, then run `ez restack` again.");

@@ -52,8 +52,9 @@ pub fn run(
     };
 
     if git::branch_exists(name) {
-        ui::hint(&format!("Use `ez checkout {name}` to switch to it"));
-        ui::hint(&format!("Use `ez delete {name}` to delete and recreate it"));
+        ui::hint(&format!(
+            "Use `ez switch {name}` to switch, or `ez delete {name}` to recreate"
+        ));
         bail!(EzError::BranchAlreadyExists(name.to_string()));
     }
 
@@ -64,10 +65,9 @@ pub fn run(
             git::add_all()?;
         }
         if !git::has_staged_changes()? {
-            ui::hint("Stage your changes first:  git add <files>");
-            ui::hint(&format!(
-                "Or create the branch without committing:  ez create {name}"
-            ));
+            ui::hint(
+                "Stage changes first: `git add <files>`, or drop -m to create without committing",
+            );
             bail!(EzError::NothingToCommit);
         }
         git::commit(msg)?;

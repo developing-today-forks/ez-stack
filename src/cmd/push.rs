@@ -196,10 +196,7 @@ pub fn push_or_update_pr(
                         pr.number
                     ));
                 } else {
-                    if title_override.is_some() {
-                        ui::info(&format!("Updated PR #{} title", pr.number));
-                    }
-                    ui::info(&format!("Updated PR #{} body", pr.number));
+                    ui::info(&format!("Updated PR #{}", pr.number));
                 }
             } else if title_override.is_some() {
                 if let Err(e) = github::edit_pr(pr.number, title_override, None) {

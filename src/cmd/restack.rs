@@ -26,10 +26,8 @@ pub fn run() -> Result<()> {
         }
 
         // Guard: skip branches checked out in another worktree.
-        if let Ok(Some(wt_path)) = git::branch_checked_out_elsewhere(branch_name, &current_root) {
-            ui::warn(&format!(
-                "`{branch_name}` is checked out in worktree `{wt_path}` — run `ez restack` in that worktree"
-            ));
+        if let Ok(Some(_wt_path)) = git::branch_checked_out_elsewhere(branch_name, &current_root) {
+            ui::warn(&format!("Skipped `{branch_name}` (in worktree)"));
             skipped += 1;
             continue;
         }
@@ -45,7 +43,7 @@ pub fn run() -> Result<()> {
             let meta = state.get_branch_mut(branch_name)?;
             meta.parent_head = current_parent_tip;
             restacked += 1;
-            ui::success(&format!("Restacked `{branch_name}` onto `{parent}`"));
+            ui::info(&format!("Restacked `{branch_name}` onto `{parent}`"));
 
             // Auto-drop commits whose patches are already upstream.
             let mut redundant_count: u64 = 0;
@@ -58,9 +56,7 @@ pub fn run() -> Result<()> {
                     ));
                     match git::rebase(&parent, branch_name) {
                         Ok(true) => {
-                            ui::success(&format!(
-                                "Cleaned up `{branch_name}` — dropped redundant commits"
-                            ));
+                            ui::info(&format!("Dropped redundant commits from `{branch_name}`"));
                         }
                         Ok(false) => {
                             ui::warn(&format!(
@@ -104,6 +100,10 @@ pub fn run() -> Result<()> {
 
     if restacked == 0 && skipped == 0 {
         ui::info("All branches are up to date — nothing to restack");
+    }
+
+    if restacked > 0 {
+        ui::success(&format!("Restacked {restacked} branch(es)"));
     }
 
     Ok(())

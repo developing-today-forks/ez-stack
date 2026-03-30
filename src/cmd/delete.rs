@@ -177,10 +177,10 @@ fn delete_with_worktree(
                  Use `ez delete {target} --force` to discard uncommitted changes"
             );
         }
-        ui::success(&format!("Removed worktree at `{wt_path}`"));
+        ui::info(&format!("Removed worktree at `{wt_path}`"));
     } else if wt_dir.exists() {
         let _ = std::fs::remove_dir_all(&wt_path);
-        ui::success(&format!("Cleaned up stale directory at `{wt_path}`"));
+        ui::info(&format!("Cleaned up stale directory at `{wt_path}`"));
     }
 
     // --- Phase 3: Mutate stack state ---
@@ -236,7 +236,6 @@ fn delete_with_worktree(
 
     // If we were inside the deleted worktree, print repo root for shell cd.
     if inside_worktree {
-        ui::hint(&format!("cd {repo_root}"));
         println!("{repo_root}");
     }
 
