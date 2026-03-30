@@ -57,16 +57,17 @@ pub fn run(json: bool) -> Result<()> {
 
     // Trunk.
     let m = if current == state.trunk { " *" } else { "  " };
+    let trunk_label = format!("{} (trunk)", state.trunk);
     eprintln!(
         "{}",
         row(
             m,
-            &state.trunk,
+            &trunk_label,
             "-",
             "-",
             &last_activity(&state.trunk),
             "-",
-            "(trunk)"
+            "-"
         )
     );
 
