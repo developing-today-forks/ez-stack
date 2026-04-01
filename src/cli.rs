@@ -251,7 +251,7 @@ Examples:
         json: bool,
     },
 
-    /// List all branches with PRs, worktree paths, and working tree state
+    /// List all local branches, including untracked ones, with PRs, worktree paths, and working tree state
     #[command(
         alias = "branch",
         after_help = "\
@@ -289,7 +289,7 @@ Examples:
   git diff $(ez parent)...HEAD --stat")]
     Parent,
 
-    /// Delete a branch (and its worktree if present) and reparent its children
+    /// Delete a branch (and its worktree if present), stop listeners on its dev port, and reparent its children
     #[command(after_help = "\
 Examples:
   ez delete

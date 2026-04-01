@@ -33,7 +33,7 @@ pub enum EzError {
     AlreadyAtBottom,
 
     #[error(
-        "rebase conflict on branch `{0}` — resolve conflicts, then run `ez restack` to continue"
+        "rebase conflict on branch `{0}` — see the conflict details above, then run `ez restack` after applying the resolution"
     )]
     RebaseConflict(String),
 

@@ -90,6 +90,68 @@ pub fn get_pr_status(branch: &str) -> Result<Option<PrInfo>> {
     }
 }
 
+pub fn get_all_pr_statuses() -> std::collections::HashMap<String, PrInfo> {
+    let mut map = std::collections::HashMap::new();
+    let mut page = 1;
+
+    loop {
+        let route = format!("repos/{{owner}}/{{repo}}/pulls?state=all&per_page=100&page={page}");
+        let output = run_gh(&["api", &route]);
+
+        let Ok(json_str) = output else {
+            break;
+        };
+        let Ok(values) = serde_json::from_str::<Vec<serde_json::Value>>(&json_str) else {
+            break;
+        };
+        if values.is_empty() {
+            break;
+        }
+
+        merge_pr_status_page(&mut map, &values);
+
+        if values.len() < 100 {
+            break;
+        }
+        page += 1;
+    }
+
+    map
+}
+
+fn merge_pr_status_page(
+    map: &mut std::collections::HashMap<String, PrInfo>,
+    values: &[serde_json::Value],
+) {
+    for value in values {
+        let Some((head, pr)) = pr_info_from_rest_value(value) else {
+            continue;
+        };
+        // Keep the first PR we see for a branch name. The REST API returns newest
+        // PRs first, so later pages may contain stale historical PRs for reused names.
+        map.entry(head).or_insert(pr);
+    }
+}
+
+fn pr_info_from_rest_value(value: &serde_json::Value) -> Option<(String, PrInfo)> {
+    let head = value["head"]["ref"].as_str()?.to_string();
+    Some((
+        head,
+        PrInfo {
+            number: value["number"].as_u64().unwrap_or(0),
+            url: value["html_url"].as_str().unwrap_or("").to_string(),
+            state: value["state"]
+                .as_str()
+                .unwrap_or("UNKNOWN")
+                .to_ascii_uppercase(),
+            title: value["title"].as_str().unwrap_or("").to_string(),
+            base: value["base"]["ref"].as_str().unwrap_or("").to_string(),
+            is_draft: value["draft"].as_bool().unwrap_or(false),
+            merged: !value["merged_at"].is_null(),
+        },
+    ))
+}
+
 pub fn merge_pr(pr_number: u64, method: &str) -> Result<()> {
     let flag = match method {
         "squash" => "--squash",
@@ -243,4 +305,68 @@ pub fn set_pr_ready(pr_number: u64, ready: bool) -> Result<()> {
         run_gh(&["pr", "ready", "--undo", &number])?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn merge_pr_status_page_keeps_first_pr_for_reused_branch_names() {
+        let mut map = std::collections::HashMap::new();
+        let values = vec![
+            serde_json::json!({
+                "number": 12,
+                "html_url": "https://example.com/pr/12",
+                "state": "closed",
+                "title": "Newest PR",
+                "draft": false,
+                "merged_at": "2026-03-31T10:00:00Z",
+                "base": {"ref": "main"},
+                "head": {"ref": "feat/reused"},
+            }),
+            serde_json::json!({
+                "number": 4,
+                "html_url": "https://example.com/pr/4",
+                "state": "closed",
+                "title": "Old PR",
+                "draft": false,
+                "merged_at": null,
+                "base": {"ref": "main"},
+                "head": {"ref": "feat/reused"},
+            }),
+        ];
+
+        merge_pr_status_page(&mut map, &values);
+
+        let pr = map.get("feat/reused").expect("branch should be present");
+        assert_eq!(pr.number, 12);
+        assert_eq!(pr.title, "Newest PR");
+        assert!(pr.merged);
+    }
+
+    #[test]
+    fn pr_info_from_rest_value_extracts_expected_fields() {
+        let value = serde_json::json!({
+            "number": 97,
+            "html_url": "https://example.com/pr/97",
+            "state": "open",
+            "title": "Test PR",
+            "draft": true,
+            "merged_at": null,
+            "base": {"ref": "develop"},
+            "head": {"ref": "feat/test"},
+        });
+
+        let (head, pr) = pr_info_from_rest_value(&value).expect("valid PR payload");
+
+        assert_eq!(head, "feat/test");
+        assert_eq!(pr.number, 97);
+        assert_eq!(pr.url, "https://example.com/pr/97");
+        assert_eq!(pr.state, "OPEN");
+        assert_eq!(pr.title, "Test PR");
+        assert_eq!(pr.base, "develop");
+        assert!(pr.is_draft);
+        assert!(!pr.merged);
+    }
 }

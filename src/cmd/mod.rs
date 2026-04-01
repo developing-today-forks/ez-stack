@@ -18,6 +18,7 @@ pub mod pr_edit;
 pub mod pr_link;
 pub mod pr_view;
 pub mod push;
+pub mod rebase_conflict;
 pub mod restack;
 pub mod scope;
 pub mod setup;

@@ -1,6 +1,7 @@
 use anyhow::{Result, bail};
 use std::collections::HashMap;
 
+use crate::dev;
 use crate::error::EzError;
 use crate::git;
 use crate::github;
@@ -126,6 +127,7 @@ fn delete_with_worktree(
 ) -> Result<()> {
     let wt_path = worktree_map[target].clone();
     let repo_root = git::main_worktree_root()?;
+    let port = dev::dev_port(target);
 
     let current_dir = std::env::current_dir()
         .ok()
@@ -161,6 +163,26 @@ fn delete_with_worktree(
     if inside_worktree {
         std::env::set_current_dir(&repo_root)?;
     }
+
+    let killed_pids = match dev::terminate_listener_processes(port) {
+        Ok(pids) => {
+            if !pids.is_empty() {
+                ui::info(&format!(
+                    "Stopped {} process(es) on dev port {}",
+                    pids.len(),
+                    port
+                ));
+            }
+            pids
+        }
+        Err(e) => {
+            ui::warn(&format!(
+                "Failed to stop process(es) on dev port {}: {}",
+                port, e
+            ));
+            Vec::new()
+        }
+    };
 
     let _ = git::worktree_prune();
 
@@ -230,6 +252,8 @@ fn delete_with_worktree(
         "cmd": "delete",
         "branch": target,
         "parent": parent,
+        "dev_port": port,
+        "killed_pids": killed_pids,
         "worktree": wt_path,
         "reparented_children": children.len(),
     }));

@@ -1,5 +1,6 @@
 use anyhow::{Result, bail};
 
+use crate::cmd::rebase_conflict;
 use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
@@ -36,60 +37,66 @@ pub fn run() -> Result<()> {
         let before_sha = git::rev_parse(branch_name).unwrap_or_default();
 
         let sp = ui::spinner(&format!("Restacking `{branch_name}` onto `{parent}`..."));
-        let ok = git::rebase_onto(&current_parent_tip, &stored_parent_head, branch_name)?;
+        let outcome = git::rebase_onto(&current_parent_tip, &stored_parent_head, branch_name)?;
         sp.finish_and_clear();
 
-        if ok {
-            let meta = state.get_branch_mut(branch_name)?;
-            meta.parent_head = current_parent_tip;
-            restacked += 1;
-            ui::info(&format!("Restacked `{branch_name}` onto `{parent}`"));
+        match outcome {
+            git::RebaseOutcome::RebasingComplete => {
+                let meta = state.get_branch_mut(branch_name)?;
+                meta.parent_head = current_parent_tip;
+                restacked += 1;
+                ui::info(&format!("Restacked `{branch_name}` onto `{parent}`"));
 
-            // Auto-drop commits whose patches are already upstream.
-            let mut redundant_count: u64 = 0;
-            if let Ok(cherry) = git::cherry(&parent, branch_name) {
-                let redundant: Vec<&str> = cherry.lines().filter(|l| l.starts_with("- ")).collect();
-                if !redundant.is_empty() {
-                    redundant_count = redundant.len() as u64;
-                    ui::info(&format!(
-                        "Dropping {redundant_count} redundant commit(s) from `{branch_name}` (already in `{parent}`)",
-                    ));
-                    match git::rebase(&parent, branch_name) {
-                        Ok(true) => {
-                            ui::info(&format!("Dropped redundant commits from `{branch_name}`"));
-                        }
-                        Ok(false) => {
-                            ui::warn(&format!(
-                                "Could not auto-drop redundant commits from `{branch_name}` (conflict)"
-                            ));
-                            ui::hint(&format!(
-                                "Run `git rebase {parent}` on `{branch_name}` manually and skip redundant commits"
-                            ));
-                        }
-                        Err(e) => {
-                            ui::warn(&format!(
-                                "Could not clean up redundant commits from `{branch_name}`: {e}"
-                            ));
+                // Auto-drop commits whose patches are already upstream.
+                let mut redundant_count: u64 = 0;
+                if let Ok(cherry) = git::cherry(&parent, branch_name) {
+                    let redundant: Vec<&str> =
+                        cherry.lines().filter(|l| l.starts_with("- ")).collect();
+                    if !redundant.is_empty() {
+                        redundant_count = redundant.len() as u64;
+                        ui::info(&format!(
+                            "Dropping {redundant_count} redundant commit(s) from `{branch_name}` (already in `{parent}`)",
+                        ));
+                        match git::rebase(&parent, branch_name) {
+                            Ok(true) => {
+                                ui::info(&format!(
+                                    "Dropped redundant commits from `{branch_name}`"
+                                ));
+                            }
+                            Ok(false) => {
+                                ui::warn(&format!(
+                                    "Could not auto-drop redundant commits from `{branch_name}` (conflict)"
+                                ));
+                                ui::hint(&format!(
+                                    "Run `git rebase {parent}` on `{branch_name}` manually and skip redundant commits"
+                                ));
+                            }
+                            Err(e) => {
+                                ui::warn(&format!(
+                                    "Could not clean up redundant commits from `{branch_name}`: {e}"
+                                ));
+                            }
                         }
                     }
                 }
-            }
 
-            let after_sha = git::rev_parse(branch_name).unwrap_or_default();
-            ui::receipt(&serde_json::json!({
-                "cmd": "restack",
-                "branch": branch_name,
-                "action": "restacked",
-                "parent": parent,
-                "before": &before_sha[..before_sha.len().min(7)],
-                "after": &after_sha[..after_sha.len().min(7)],
-                "redundant_commits": redundant_count,
-            }));
-        } else {
-            git::checkout(&original_branch)?;
-            state.save()?;
-            ui::hint("Resolve the conflicts manually, then run `ez restack` again.");
-            bail!(EzError::RebaseConflict(branch_name.clone()));
+                let after_sha = git::rev_parse(branch_name).unwrap_or_default();
+                ui::receipt(&serde_json::json!({
+                    "cmd": "restack",
+                    "branch": branch_name,
+                    "action": "restacked",
+                    "parent": parent,
+                    "before": &before_sha[..before_sha.len().min(7)],
+                    "after": &after_sha[..after_sha.len().min(7)],
+                    "redundant_commits": redundant_count,
+                }));
+            }
+            git::RebaseOutcome::Conflict(conflict) => {
+                git::checkout(&original_branch)?;
+                state.save()?;
+                rebase_conflict::report("restack", branch_name, &parent, &conflict, "ez restack");
+                bail!(EzError::RebaseConflict(branch_name.clone()));
+            }
         }
     }
 

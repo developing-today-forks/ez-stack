@@ -16,7 +16,7 @@ ez create feat/auth              # 1. Start: worktree + branch + cd
 # ... do your work ...
 ez push -am "feat: add auth"     # 2. Ship: stage + commit + push + create PR
 ez sync --autostash              # 3. Sync: pull trunk, clean merged, restack
-ez delete feat/auth --yes        # 4. Done: remove worktree + branch + cd back
+ez delete feat/auth --yes        # 4. Done: remove worktree + branch, stop branch dev server, + cd back
 ```
 
 That's it for normal flows. No raw `git commit`, no raw `git push`, no `gh pr create`, no manual `cd`.
@@ -99,7 +99,7 @@ ez sync --autostash   # pulls trunk, cleans merged PRs, restacks your branches
 
 ### Finish
 ```bash
-cd $(ez delete my-task --yes)   # removes worktree + branch, cd's to repo root
+cd $(ez delete my-task --yes)   # removes worktree + branch, stops the branch dev server, cd's to repo root
 ```
 
 ## Multi-Agent Rules

@@ -1,5 +1,6 @@
 mod cli;
 mod cmd;
+mod dev;
 mod error;
 #[allow(dead_code)]
 mod git;

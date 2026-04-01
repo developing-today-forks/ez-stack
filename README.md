@@ -50,7 +50,7 @@ ez list
      feat/ui                        -        -      1h     16503   no worktree
 ```
 
-Shows all branches with PR status, CI pass/fail, time since last commit, deterministic dev port per worktree, and working tree state. `ez list --json` for machine output.
+Shows all local branches with PR status, CI pass/fail, time since last commit, deterministic dev port per worktree, and working tree state. Branches not tracked by ez still appear and are labeled `not tracked`. `ez list --json` for machine output.
 
 ## Multi-Agent Workflow
 
@@ -118,8 +118,8 @@ Use `--hook <name>` for project-specific hooks, or `--hook` alone to list availa
 | Command | Description |
 |---------|-------------|
 | `ez create <name>` | Create worktree + branch (default). `--from main` for independent work. `--no-worktree` for branch only. |
-| `ez list` | Dashboard: branches, PRs, CI, age, ports, working tree state. `--json` for machine output. |
-| `ez delete [name]` | Delete branch + worktree. Auto-detects worktrees. `--yes` for agents. |
+| `ez list` | Dashboard for all local branches: PRs, CI, age, ports, and working tree state. `--json` for machine output. |
+| `ez delete [name]` | Delete branch + worktree. Auto-detects worktrees and best-effort stops listeners on the branch dev port. `--yes` for agents. |
 | `ez push` | Push + create/update PR. `-am "msg"` to stage+commit+push in one step. |
 
 ### Committing

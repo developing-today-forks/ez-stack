@@ -1,5 +1,6 @@
 use anyhow::{Result, bail};
 
+use crate::cmd::rebase_conflict;
 use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
@@ -71,18 +72,21 @@ pub fn run(message: Option<&str>, all: bool) -> Result<()> {
         let old_parent_head = state.get_branch(child_name)?.parent_head.clone();
 
         let sp = ui::spinner(&format!("Restacking `{child_name}`..."));
-        let ok = git::rebase_onto(&current_head, &old_parent_head, child_name)?;
+        let outcome = git::rebase_onto(&current_head, &old_parent_head, child_name)?;
         sp.finish_and_clear();
 
-        if ok {
-            let child = state.get_branch_mut(child_name)?;
-            child.parent_head = current_head.clone();
-            ui::info(&format!("Restacked `{child_name}`"));
-        } else {
-            git::checkout(&current)?;
-            state.save()?;
-            ui::hint("Resolve conflicts, then run `ez restack`");
-            bail!(EzError::RebaseConflict(child_name.clone()));
+        match outcome {
+            git::RebaseOutcome::RebasingComplete => {
+                let child = state.get_branch_mut(child_name)?;
+                child.parent_head = current_head.clone();
+                ui::info(&format!("Restacked `{child_name}`"));
+            }
+            git::RebaseOutcome::Conflict(conflict) => {
+                git::checkout(&current)?;
+                state.save()?;
+                rebase_conflict::report("amend", child_name, &current, &conflict, "ez restack");
+                bail!(EzError::RebaseConflict(child_name.clone()));
+            }
         }
     }
 

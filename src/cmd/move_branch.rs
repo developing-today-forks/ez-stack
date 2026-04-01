@@ -1,5 +1,6 @@
 use anyhow::{Result, bail};
 
+use crate::cmd::rebase_conflict;
 use crate::error::EzError;
 use crate::git;
 use crate::github;
@@ -49,10 +50,17 @@ pub fn run(onto: &str) -> Result<()> {
 
     // Rebase current branch onto the new parent.
     let sp = ui::spinner(&format!("Rebasing `{current}` onto `{onto}`..."));
-    let ok = git::rebase_onto(&new_parent_head, &old_parent_head, &current)?;
+    let outcome = git::rebase_onto(&new_parent_head, &old_parent_head, &current)?;
     sp.finish_and_clear();
 
-    if !ok {
+    if let git::RebaseOutcome::Conflict(conflict) = outcome {
+        rebase_conflict::report(
+            "move",
+            &current,
+            onto,
+            &conflict,
+            &format!("ez move --onto {onto}"),
+        );
         bail!(EzError::RebaseConflict(current.clone()));
     }
 
@@ -93,18 +101,21 @@ pub fn run(onto: &str) -> Result<()> {
         }
 
         let sp = ui::spinner(&format!("Restacking `{child_name}` onto `{current}`..."));
-        let ok = git::rebase_onto(&new_tip, &child_parent_head, child_name)?;
+        let outcome = git::rebase_onto(&new_tip, &child_parent_head, child_name)?;
         sp.finish_and_clear();
 
-        if ok {
-            let child = state.get_branch_mut(child_name)?;
-            child.parent_head = new_tip.clone();
-            restacked += 1;
-            ui::info(&format!("Restacked `{child_name}` onto `{current}`"));
-        } else {
-            state.save()?;
-            ui::hint("Resolve the conflicts manually, then run `ez restack` again.");
-            bail!(EzError::RebaseConflict(child_name.clone()));
+        match outcome {
+            git::RebaseOutcome::RebasingComplete => {
+                let child = state.get_branch_mut(child_name)?;
+                child.parent_head = new_tip.clone();
+                restacked += 1;
+                ui::info(&format!("Restacked `{child_name}` onto `{current}`"));
+            }
+            git::RebaseOutcome::Conflict(conflict) => {
+                state.save()?;
+                rebase_conflict::report("move", child_name, &current, &conflict, "ez restack");
+                bail!(EzError::RebaseConflict(child_name.clone()));
+            }
         }
     }
 

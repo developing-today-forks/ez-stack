@@ -1,9 +1,63 @@
 use anyhow::Result;
 
+use crate::cmd::rebase_conflict;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
 use crate::ui;
+
+fn cleanup_candidate_branches(
+    trunk: &str,
+    managed_branches: &[String],
+    local_branches: &[String],
+) -> Vec<String> {
+    let mut seen = std::collections::HashSet::new();
+    let mut branches = Vec::new();
+
+    for branch in managed_branches {
+        if branch != trunk && seen.insert(branch.clone()) {
+            branches.push(branch.clone());
+        }
+    }
+
+    for branch in local_branches {
+        if branch != trunk && seen.insert(branch.clone()) {
+            branches.push(branch.clone());
+        }
+    }
+
+    branches
+}
+
+fn cleanup_reason(
+    pr_info: Option<&github::PrInfo>,
+    merged_via_git: bool,
+    merged_via_diff: bool,
+) -> Option<&'static str> {
+    if let Some(pr) = pr_info {
+        if pr.merged {
+            Some("merged")
+        } else if pr.state == "CLOSED" {
+            Some("pr_closed")
+        } else {
+            None
+        }
+    } else if merged_via_git || merged_via_diff {
+        Some("merged")
+    } else {
+        None
+    }
+}
+
+fn inside_worktree_path(current_dir: &str, worktree_path: &str) -> bool {
+    fn normalize(path: &str) -> std::path::PathBuf {
+        std::fs::canonicalize(path).unwrap_or_else(|_| std::path::PathBuf::from(path))
+    }
+
+    let current = normalize(current_dir);
+    let worktree = normalize(worktree_path);
+    current == worktree || current.starts_with(&worktree)
+}
 
 pub fn run(dry_run: bool, autostash: bool, force: bool) -> Result<()> {
     let state = StackState::load()?;
@@ -27,7 +81,9 @@ pub fn run(dry_run: bool, autostash: bool, force: bool) -> Result<()> {
         for branch_name in &managed_branches {
             let meta = state.get_branch(branch_name)?;
             if meta.pr_number.is_some() {
-                ui::info(&format!("Would check if PR for `{branch_name}` is merged"));
+                ui::info(&format!(
+                    "Would check if PR for `{branch_name}` is merged or closed"
+                ));
                 if let Some(wt_path) = dry_worktree_map.get(branch_name.as_str()) {
                     ui::info(&format!("  → Would remove worktree at `{wt_path}`"));
                 }
@@ -84,6 +140,8 @@ fn run_sync_inner(force: bool) -> Result<()> {
     let mut state = StackState::load()?;
     let original_branch = git::current_branch()?;
     let original_root = git::repo_root()?;
+    let mut shell_cd_path: Option<String> = None;
+    let mut cleaned_current_worktree = false;
 
     // Fetch from remote.
     let sp = ui::spinner(&format!("Fetching from `{}`...", state.remote));
@@ -106,10 +164,21 @@ fn run_sync_inner(force: bool) -> Result<()> {
                 Err(e) => ui::warn(&format!("Could not update `{}` — {e}", state.trunk)),
             }
         } else {
-            // Not on trunk: update ref directly without checkout.
-            match git::fetch_refupdate(&state.remote, &state.trunk) {
-                Ok(()) => ui::info(&format!("Updated `{}` to latest", state.trunk)),
-                Err(e) => ui::warn(&format!("Could not update `{}` — {e}", state.trunk)),
+            let remote_ref = format!("{}/{}", state.remote, state.trunk);
+            match git::branch_checked_out_elsewhere(&state.trunk, &original_root) {
+                Ok(Some(trunk_worktree)) => {
+                    match git::fast_forward_merge_at(&trunk_worktree, &remote_ref) {
+                        Ok(()) => ui::info(&format!("Updated `{}` to latest", state.trunk)),
+                        Err(e) => ui::warn(&format!("Could not update `{}` — {e}", state.trunk)),
+                    }
+                }
+                _ => {
+                    // Not on trunk: update ref directly without checkout.
+                    match git::fetch_refupdate(&state.remote, &state.trunk) {
+                        Ok(()) => ui::info(&format!("Updated `{}` to latest", state.trunk)),
+                        Err(e) => ui::warn(&format!("Could not update `{}` — {e}", state.trunk)),
+                    }
+                }
             }
         }
     }
@@ -122,9 +191,14 @@ fn run_sync_inner(force: bool) -> Result<()> {
         .filter(|wt| wt.path.contains("/.worktrees/"))
         .filter_map(|wt| wt.branch.map(|b| (b, wt.path)))
         .collect();
+    let main_root = git::main_worktree_root().unwrap_or_else(|_| original_root.clone());
+    let current_dir = std::env::current_dir()
+        .ok()
+        .map(|path| path.to_string_lossy().into_owned())
+        .unwrap_or_default();
 
     // Detect merged PRs and clean up.
-    let managed_branches: Vec<String> = {
+    let managed_branches = {
         let mut order = state.topo_order();
         // Also include branches not in topo order (orphaned branches).
         for key in state.branches.keys() {
@@ -134,15 +208,36 @@ fn run_sync_inner(force: bool) -> Result<()> {
         }
         order
     };
+    let local_branches = git::branch_list().unwrap_or_default();
+    let cleanup_candidates =
+        cleanup_candidate_branches(&state.trunk, &managed_branches, &local_branches);
     let mut cleaned = Vec::new();
+    let has_any_prs = !cleanup_candidates.is_empty();
+    let pr_statuses = if has_any_prs {
+        let sp = ui::spinner("Checking PR states...");
+        let statuses = github::get_all_pr_statuses();
+        sp.finish_and_clear();
+        statuses
+    } else {
+        std::collections::HashMap::new()
+    };
 
-    for branch_name in &managed_branches {
-        let meta = state.get_branch(branch_name)?;
-        let pr_number = meta.pr_number;
+    for branch_name in &cleanup_candidates {
+        let meta = state.get_branch(branch_name).ok().cloned();
+        let is_managed = meta.is_some();
+        let pr_info = pr_statuses.get(branch_name.as_str());
+        let pr_number = meta
+            .as_ref()
+            .and_then(|m| m.pr_number)
+            .or(pr_info.map(|pr| pr.number));
+        let parent = meta.as_ref().map(|m| m.parent.clone());
 
         // Auto-clean branches that no longer exist locally (deleted outside of ez).
         if !git::branch_exists(branch_name) {
-            let parent = state.get_branch(branch_name)?.parent.clone();
+            if !is_managed {
+                continue;
+            }
+            let parent = parent.clone().expect("managed branch should have a parent");
             let children = state.children_of(branch_name);
             if let Ok(parent_tip) = git::rev_parse(&parent) {
                 for child_name in &children {
@@ -169,20 +264,7 @@ fn run_sync_inner(force: bool) -> Result<()> {
             continue;
         }
 
-        // Check if the branch is merged — three methods:
-        // 1. PR status via gh (if pr_number exists)
-        // 2. Git-level: branch tip is ancestor of trunk (regular merge / fast-forward)
-        // 3. Diff-level: branch has no diff against trunk (squash merge — different SHAs but same content)
-        let merged_via_pr = if pr_number.is_some() {
-            let sp = ui::spinner(&format!("Checking PR status for `{branch_name}`..."));
-            let status = github::get_pr_status(branch_name)?;
-            sp.finish_and_clear();
-            status.is_some_and(|pr| pr.merged)
-        } else {
-            false
-        };
-
-        let merged_via_git = if !merged_via_pr {
+        let merged_via_git = if pr_info.is_none() {
             git::is_ancestor(branch_name, &state.trunk)
         } else {
             false
@@ -191,66 +273,143 @@ fn run_sync_inner(force: bool) -> Result<()> {
         // Diff-level check: only for branches WITHOUT a PR.
         // If a PR exists, the PR status is authoritative. An empty diff might just
         // mean someone cherry-picked the changes, not that the PR was merged.
-        let merged_via_diff = if !merged_via_pr && !merged_via_git && pr_number.is_none() {
-            let range = format!("{}...{}", state.trunk, branch_name);
-            git::diff(&range, true, false)
-                .map(|stat| stat.trim().is_empty())
-                .unwrap_or(false)
-        } else {
-            false
-        };
+        let merged_via_diff =
+            if is_managed && pr_info.is_none() && !merged_via_git && pr_number.is_none() {
+                let range = format!("{}...{}", state.trunk, branch_name);
+                git::diff(&range, true, false)
+                    .map(|stat| stat.trim().is_empty())
+                    .unwrap_or(false)
+            } else {
+                false
+            };
 
-        let merged = merged_via_pr || merged_via_git || merged_via_diff;
+        let cleanup_reason = cleanup_reason(pr_info, merged_via_git, merged_via_diff);
 
-        if !merged {
+        if cleanup_reason.is_none() {
             continue;
         }
 
-        // Reparent children to this branch's parent.
-        let parent = state.get_branch(branch_name)?.parent.clone();
-        let children = state.children_of(branch_name);
-        let parent_tip = git::rev_parse(&parent)?;
+        let cleanup_reason = cleanup_reason.unwrap_or("merged");
 
-        for child_name in &children {
-            let child = state.get_branch_mut(child_name)?;
-            child.parent = parent.clone();
-            child.parent_head = parent_tip.clone();
-        }
-
-        // Remove from state.
-        state.remove_branch(branch_name);
-
-        // Remove worktree for this branch (if any).
+        // Remove worktree for this branch (if any) before mutating stack state.
+        // If cleanup fails, keep the branch tracked so `ez sync --force` or `ez delete`
+        // can recover it later.
         if let Some(wt_path) = worktree_map.get(branch_name.as_str()) {
+            let is_current_worktree = inside_worktree_path(&current_dir, wt_path)
+                || inside_worktree_path(&original_root, wt_path);
+            if is_current_worktree && let Err(e) = std::env::set_current_dir(&main_root) {
+                ui::warn(&format!(
+                    "Could not move out of worktree `{wt_path}` before cleanup: {e}"
+                ));
+                ui::info(&format!(
+                    "Kept `{branch_name}` tracked because cleanup did not complete"
+                ));
+                ui::receipt(&serde_json::json!({
+                    "cmd": "sync",
+                    "branch": branch_name,
+                    "action": "cleanup_skipped",
+                    "reason": "cwd_move_failed",
+                    "parent": parent,
+                    "worktree": wt_path,
+                }));
+                continue;
+            }
             let result = if force {
                 git::worktree_remove_force(wt_path)
             } else {
                 git::worktree_remove(wt_path)
             };
             match result {
-                Ok(()) => ui::info(&format!("Removed worktree at `{wt_path}`")),
-                Err(e) => ui::warn(&format!(
-                    "Could not remove worktree at `{wt_path}`: {e}\n  Hint: use `ez sync --force` to discard uncommitted changes"
-                )),
+                Ok(()) => {
+                    ui::info(&format!("Removed worktree at `{wt_path}`"));
+                    if is_current_worktree {
+                        shell_cd_path = Some(main_root.clone());
+                        cleaned_current_worktree = true;
+                    }
+                }
+                Err(e) => {
+                    ui::warn(&format!(
+                        "Could not remove worktree at `{wt_path}`: {e}\n  Hint: use `ez sync --force` to discard uncommitted changes"
+                    ));
+                    ui::info(&format!(
+                        "Kept `{branch_name}` tracked because cleanup did not complete"
+                    ));
+                    ui::receipt(&serde_json::json!({
+                        "cmd": "sync",
+                        "branch": branch_name,
+                        "action": "cleanup_skipped",
+                        "reason": "worktree_remove_failed",
+                        "parent": parent,
+                        "worktree": wt_path,
+                    }));
+                    continue;
+                }
             }
         }
 
         // If we're on the branch being deleted, switch to trunk first.
-        if *branch_name == original_branch {
+        if *branch_name == original_branch && !cleaned_current_worktree {
             if let Err(e) = git::checkout(&state.trunk) {
                 ui::warn(&format!("Could not switch to trunk: {e}"));
+                ui::info(&format!(
+                    "Kept `{branch_name}` tracked because cleanup did not complete"
+                ));
+                ui::receipt(&serde_json::json!({
+                    "cmd": "sync",
+                    "branch": branch_name,
+                    "action": "cleanup_skipped",
+                    "reason": "checkout_failed",
+                    "parent": parent,
+                }));
+                continue;
             }
         }
 
-        // Delete local branch (ignore errors if already gone).
-        let _ = git::delete_branch(branch_name, true);
+        // Delete local branch. If this fails, keep the branch tracked so cleanup can be retried.
+        if git::branch_exists(branch_name)
+            && let Err(e) = git::delete_branch(branch_name, true)
+        {
+            ui::warn(&format!(
+                "Could not delete local branch `{branch_name}`: {e}"
+            ));
+            ui::info(&format!(
+                "Kept `{branch_name}` tracked because cleanup did not complete"
+            ));
+            ui::receipt(&serde_json::json!({
+                "cmd": "sync",
+                "branch": branch_name,
+                "action": "cleanup_skipped",
+                "reason": "branch_delete_failed",
+                "parent": parent,
+            }));
+            continue;
+        }
 
-        ui::info(&format!("Cleaned up `{branch_name}` (merged)"));
+        if is_managed {
+            let parent_name = parent.clone().expect("managed branch should have a parent");
+            let children = state.children_of(branch_name);
+            let parent_tip = git::rev_parse(&parent_name)?;
+
+            for child_name in &children {
+                let child = state.get_branch_mut(child_name)?;
+                child.parent = parent_name.clone();
+                child.parent_head = parent_tip.clone();
+            }
+
+            state.remove_branch(branch_name);
+        }
+
+        let cleanup_label = if cleanup_reason == "pr_closed" {
+            "PR closed"
+        } else {
+            "merged"
+        };
+        ui::info(&format!("Cleaned up `{branch_name}` ({cleanup_label})"));
         ui::receipt(&serde_json::json!({
             "cmd": "sync",
             "branch": branch_name,
             "action": "cleaned",
-            "reason": "merged",
+            "reason": cleanup_reason,
         }));
         cleaned.push(branch_name.clone());
     }
@@ -284,60 +443,66 @@ fn run_sync_inner(force: bool) -> Result<()> {
         let before_sha = git::rev_parse(branch_name).unwrap_or_default();
 
         let sp = ui::spinner(&format!("Restacking `{branch_name}` onto `{parent}`..."));
-        let ok = git::rebase_onto(&current_parent_tip, &stored_parent_head, branch_name)?;
+        let outcome = git::rebase_onto(&current_parent_tip, &stored_parent_head, branch_name)?;
         sp.finish_and_clear();
 
-        if ok {
-            let meta = state.get_branch_mut(branch_name)?;
-            meta.parent_head = current_parent_tip;
-            restacked += 1;
-            ui::info(&format!("Restacked `{branch_name}` onto `{parent}`"));
+        match outcome {
+            git::RebaseOutcome::RebasingComplete => {
+                let meta = state.get_branch_mut(branch_name)?;
+                meta.parent_head = current_parent_tip;
+                restacked += 1;
+                ui::info(&format!("Restacked `{branch_name}` onto `{parent}`"));
 
-            // Post-restack: detect and auto-drop redundant commits.
-            let mut redundant_count: u64 = 0;
-            if let Ok(cherry) = git::cherry(&parent, branch_name) {
-                let redundant: Vec<&str> = cherry.lines().filter(|l| l.starts_with("- ")).collect();
-                if !redundant.is_empty() {
-                    redundant_count = redundant.len() as u64;
-                    ui::info(&format!(
-                        "Dropping {redundant_count} redundant commit(s) from `{branch_name}` (already in `{parent}`)",
-                    ));
-                    match git::rebase(&parent, branch_name) {
-                        Ok(true) => {
-                            ui::info(&format!("Dropped redundant commits from `{branch_name}`"));
-                        }
-                        Ok(false) => {
-                            ui::warn(&format!(
-                                "Could not auto-drop redundant commits from `{branch_name}` (conflict)"
-                            ));
-                            ui::hint(&format!(
-                                "Run `git rebase {parent}` on `{branch_name}` manually and skip redundant commits"
-                            ));
-                        }
-                        Err(e) => {
-                            ui::warn(&format!(
-                                "Could not clean up redundant commits from `{branch_name}`: {e}"
-                            ));
+                // Post-restack: detect and auto-drop redundant commits.
+                let mut redundant_count: u64 = 0;
+                if let Ok(cherry) = git::cherry(&parent, branch_name) {
+                    let redundant: Vec<&str> =
+                        cherry.lines().filter(|l| l.starts_with("- ")).collect();
+                    if !redundant.is_empty() {
+                        redundant_count = redundant.len() as u64;
+                        ui::info(&format!(
+                            "Dropping {redundant_count} redundant commit(s) from `{branch_name}` (already in `{parent}`)",
+                        ));
+                        match git::rebase(&parent, branch_name) {
+                            Ok(true) => {
+                                ui::info(&format!(
+                                    "Dropped redundant commits from `{branch_name}`"
+                                ));
+                            }
+                            Ok(false) => {
+                                ui::warn(&format!(
+                                    "Could not auto-drop redundant commits from `{branch_name}` (conflict)"
+                                ));
+                                ui::hint(&format!(
+                                    "Run `git rebase {parent}` on `{branch_name}` manually and skip redundant commits"
+                                ));
+                            }
+                            Err(e) => {
+                                ui::warn(&format!(
+                                    "Could not clean up redundant commits from `{branch_name}`: {e}"
+                                ));
+                            }
                         }
                     }
                 }
-            }
 
-            let after_sha = git::rev_parse(branch_name).unwrap_or_default();
-            ui::receipt(&serde_json::json!({
-                "cmd": "sync",
-                "branch": branch_name,
-                "action": "restacked",
-                "parent": parent,
-                "before": &before_sha[..before_sha.len().min(7)],
-                "after": &after_sha[..after_sha.len().min(7)],
-                "redundant_commits": redundant_count,
-            }));
-        } else {
-            // Save progress so the user can fix and continue.
-            state.save()?;
-            ui::hint("Resolve the conflicts manually, then run `ez restack` to continue.");
-            anyhow::bail!(crate::error::EzError::RebaseConflict(branch_name.clone()));
+                let after_sha = git::rev_parse(branch_name).unwrap_or_default();
+                ui::receipt(&serde_json::json!({
+                    "cmd": "sync",
+                    "branch": branch_name,
+                    "action": "restacked",
+                    "parent": parent,
+                    "before": &before_sha[..before_sha.len().min(7)],
+                    "after": &after_sha[..after_sha.len().min(7)],
+                    "redundant_commits": redundant_count,
+                }));
+            }
+            git::RebaseOutcome::Conflict(conflict) => {
+                // Save progress so the user can fix and continue.
+                state.save()?;
+                rebase_conflict::report("sync", branch_name, &parent, &conflict, "ez restack");
+                anyhow::bail!(crate::error::EzError::RebaseConflict(branch_name.clone()));
+            }
         }
     }
 
@@ -345,7 +510,11 @@ fn run_sync_inner(force: bool) -> Result<()> {
 
     // Return to original branch if it still exists.
     // If it was cleaned up (merged), fall back to trunk — but trunk might be in another worktree.
-    if git::branch_exists(&original_branch) {
+    if cleaned_current_worktree {
+        ui::info(&format!(
+            "Current worktree `{original_branch}` was cleaned up — switched context to repo root"
+        ));
+    } else if git::branch_exists(&original_branch) {
         let _ = git::checkout(&original_branch);
     } else {
         match git::checkout(&state.trunk) {
@@ -373,15 +542,94 @@ fn run_sync_inner(force: bool) -> Result<()> {
     // Prune stale worktree admin entries.
     let _ = git::worktree_prune();
 
+    if let Some(path) = shell_cd_path {
+        println!("{path}");
+    }
+
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn run_signatures_compile() {
         // Verifies the public API is correct at compile time.
         let f: fn(bool, bool, bool) -> anyhow::Result<()> = super::run;
         let _ = std::mem::size_of_val(&f);
+    }
+
+    #[test]
+    fn cleanup_candidate_branches_includes_local_unmanaged_branches() {
+        let managed = vec!["feat/a".to_string()];
+        let local = vec![
+            "main".to_string(),
+            "feat/a".to_string(),
+            "feat/b".to_string(),
+            "feat/c".to_string(),
+        ];
+
+        assert_eq!(
+            cleanup_candidate_branches("main", &managed, &local),
+            vec![
+                "feat/a".to_string(),
+                "feat/b".to_string(),
+                "feat/c".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn cleanup_reason_prefers_pr_state() {
+        let closed = github::PrInfo {
+            number: 42,
+            url: String::new(),
+            state: "CLOSED".to_string(),
+            title: String::new(),
+            base: "main".to_string(),
+            is_draft: false,
+            merged: false,
+        };
+        let merged = github::PrInfo {
+            merged: true,
+            ..closed.clone()
+        };
+
+        assert_eq!(cleanup_reason(Some(&merged), false, false), Some("merged"));
+        assert_eq!(
+            cleanup_reason(Some(&closed), false, false),
+            Some("pr_closed")
+        );
+        assert_eq!(
+            cleanup_reason(
+                Some(&github::PrInfo {
+                    state: "OPEN".to_string(),
+                    ..closed
+                }),
+                true,
+                true
+            ),
+            None
+        );
+        assert_eq!(cleanup_reason(None, true, false), Some("merged"));
+        assert_eq!(cleanup_reason(None, false, true), Some("merged"));
+        assert_eq!(cleanup_reason(None, false, false), None);
+    }
+
+    #[test]
+    fn inside_worktree_path_matches_nested_paths_only() {
+        assert!(inside_worktree_path(
+            "/repo/.worktrees/feat-a",
+            "/repo/.worktrees/feat-a"
+        ));
+        assert!(inside_worktree_path(
+            "/repo/.worktrees/feat-a/src/components",
+            "/repo/.worktrees/feat-a"
+        ));
+        assert!(!inside_worktree_path(
+            "/repo/.worktrees/feat-ab",
+            "/repo/.worktrees/feat-a"
+        ));
     }
 }

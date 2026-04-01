@@ -1,8 +1,21 @@
 use anyhow::{Context, Result, bail};
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 use std::process::Command;
 
 use crate::error::EzError;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RebaseConflict {
+    pub conflicting_files: Vec<String>,
+    pub stderr: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RebaseOutcome {
+    RebasingComplete,
+    Conflict(RebaseConflict),
+}
 
 fn run_git(args: &[&str]) -> Result<String> {
     let output = Command::new("git")
@@ -229,20 +242,58 @@ pub fn fetch(remote: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn rebase_onto(new_base: &str, old_base: &str, branch: &str) -> Result<bool> {
+pub fn rebase_onto(new_base: &str, old_base: &str, branch: &str) -> Result<RebaseOutcome> {
     let (success, _, stderr) =
         run_git_with_status(&["rebase", "--onto", new_base, old_base, branch])?;
     if success {
-        Ok(true)
+        Ok(RebaseOutcome::RebasingComplete)
     } else if stderr.contains("CONFLICT") || stderr.contains("conflict") {
         // Abort the rebase so we leave the repo in a clean state
         let _ = run_git(&["rebase", "--abort"]);
-        Ok(false)
+        Ok(RebaseOutcome::Conflict(parse_rebase_conflict(&stderr)))
     } else {
         // Some other rebase failure — try to abort and report
         let _ = run_git(&["rebase", "--abort"]);
         bail!(EzError::GitError(stderr));
     }
+}
+
+fn parse_rebase_conflict(stderr: &str) -> RebaseConflict {
+    RebaseConflict {
+        conflicting_files: parse_conflicting_files(stderr),
+        stderr: stderr.trim().to_string(),
+    }
+}
+
+fn parse_conflicting_files(stderr: &str) -> Vec<String> {
+    let mut files = BTreeSet::new();
+
+    for line in stderr.lines().map(str::trim) {
+        if let Some(path) = line.split("Merge conflict in ").nth(1) {
+            if !path.is_empty() {
+                files.insert(path.to_string());
+            }
+            continue;
+        }
+
+        if let Some(detail) = line.strip_prefix("CONFLICT ")
+            && let Some(after_colon) = detail.split(": ").nth(1)
+        {
+            if let Some(path) = after_colon.split(" deleted in ").next()
+                && after_colon.contains(" deleted in ")
+                && !path.is_empty()
+            {
+                files.insert(path.to_string());
+            } else if let Some(path) = after_colon.split(" added in ").next()
+                && after_colon.contains(" added in ")
+                && !path.is_empty()
+            {
+                files.insert(path.to_string());
+            }
+        }
+    }
+
+    files.into_iter().collect()
 }
 
 /// Plain `git rebase <upstream> <branch>` — uses git's built-in patch-id detection
@@ -263,6 +314,11 @@ pub fn rebase(upstream: &str, branch: &str) -> Result<bool> {
 
 pub fn fast_forward_merge(remote_ref: &str) -> Result<()> {
     run_git(&["merge", "--ff-only", remote_ref])?;
+    Ok(())
+}
+
+pub fn fast_forward_merge_at(dir: &str, remote_ref: &str) -> Result<()> {
+    run_git(&["-C", dir, "merge", "--ff-only", remote_ref])?;
     Ok(())
 }
 
@@ -593,6 +649,23 @@ mod tests {
         assert_eq!(
             git_scope_pattern(":(glob)src/auth/**"),
             ":(glob)src/auth/**"
+        );
+    }
+
+    #[test]
+    fn test_parse_conflicting_files_extracts_merge_conflict_paths() {
+        let stderr = "\
+Rebasing (1/6)\n\
+Auto-merging src/data/competitors.ts\n\
+CONFLICT (content): Merge conflict in src/data/competitors.ts\n\
+CONFLICT (modify/delete): src/old.ts deleted in HEAD and modified in abc123.\n";
+
+        assert_eq!(
+            parse_conflicting_files(stderr),
+            vec![
+                "src/data/competitors.ts".to_string(),
+                "src/old.ts".to_string()
+            ]
         );
     }
 }

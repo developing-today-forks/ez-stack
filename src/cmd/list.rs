@@ -2,18 +2,11 @@ use anyhow::Result;
 use std::collections::HashMap;
 use std::thread;
 
+use crate::dev;
 use crate::git;
 use crate::github;
 use crate::stack::StackState;
 use crate::ui;
-
-fn dev_port(branch: &str) -> u16 {
-    let mut hash: u32 = 5381;
-    for byte in branch.bytes() {
-        hash = hash.wrapping_mul(33).wrapping_add(byte as u32);
-    }
-    10000 + (hash % 10000) as u16
-}
 
 fn format_age(secs: Option<u64>) -> String {
     match secs {
@@ -29,11 +22,70 @@ fn row(m: &str, b: &str, pr: &str, ci: &str, age: &str, port: &str, st: &str) ->
     format!("{m:<4} {b:<30} {pr:<8} {ci:<6} {age:<6} {port:<7} {st}")
 }
 
+fn combined_branch_order(
+    trunk: &str,
+    managed_order: &[String],
+    local_branches: &[String],
+) -> Vec<String> {
+    let mut seen = std::collections::HashSet::new();
+    let mut order = Vec::new();
+
+    for branch in managed_order {
+        if branch != trunk && seen.insert(branch.clone()) {
+            order.push(branch.clone());
+        }
+    }
+
+    for branch in local_branches {
+        if branch != trunk && seen.insert(branch.clone()) {
+            order.push(branch.clone());
+        }
+    }
+
+    order
+}
+
+fn branch_status_label(
+    is_managed: bool,
+    has_worktree: bool,
+    wt_status: (usize, usize, usize),
+) -> String {
+    let (staged, modified, untracked) = wt_status;
+    let base = if has_worktree {
+        if staged == 0 && modified == 0 && untracked == 0 {
+            "clean".to_string()
+        } else {
+            let mut parts = Vec::new();
+            if staged > 0 {
+                parts.push(format!("{staged}S"));
+            }
+            if modified > 0 {
+                parts.push(format!("{modified}M"));
+            }
+            if untracked > 0 {
+                parts.push(format!("{untracked}U"));
+            }
+            parts.join(" ")
+        }
+    } else if is_managed {
+        "no worktree".to_string()
+    } else {
+        "not tracked".to_string()
+    };
+
+    if !is_managed && has_worktree {
+        format!("{base}; not tracked")
+    } else {
+        base
+    }
+}
+
 /// Fetched data for one branch.
 struct BranchData {
     name: String,
+    is_managed: bool,
     pr_number: Option<u64>,
-    parent: String,
+    parent: Option<String>,
     wt_path: Option<String>,
     ci: String,
     age: Option<u64>,
@@ -50,27 +102,36 @@ pub fn run(json: bool) -> Result<()> {
         .filter_map(|wt| wt.branch.map(|b| (b, wt.path)))
         .collect();
 
-    let order = state.topo_order();
+    let local_branches = git::branch_list()?;
+    let order = combined_branch_order(&state.trunk, &state.topo_order(), &local_branches);
 
     // Collect what we need per branch, then fetch everything in parallel.
     #[allow(clippy::type_complexity)]
-    let branch_specs: Vec<(String, Option<u64>, String, Option<String>)> = order
+    let branch_specs: Vec<(String, bool, Option<u64>, Option<String>, Option<String>)> = order
         .iter()
-        .filter_map(|b| {
-            let meta = state.get_branch(b).ok()?;
-            Some((
+        .map(|b| {
+            let meta = state.get_branch(b).ok();
+            (
                 b.clone(),
-                meta.pr_number,
-                meta.parent.clone(),
+                meta.is_some(),
+                meta.and_then(|m| m.pr_number),
+                meta.map(|m| m.parent.clone()),
                 worktree_map.get(b.as_str()).cloned(),
-            ))
+            )
         })
         .collect();
 
     // One API call for all CI statuses (instead of N sequential gh calls).
-    let has_any_pr = branch_specs.iter().any(|(_, pr, _, _)| pr.is_some());
+    let has_any_branches = !branch_specs.is_empty();
+    let pr_handle = thread::spawn(move || {
+        if has_any_branches {
+            github::get_all_pr_statuses()
+        } else {
+            HashMap::new()
+        }
+    });
     let ci_handle = thread::spawn(move || {
-        if has_any_pr {
+        if has_any_branches {
             github::get_all_ci_statuses()
         } else {
             HashMap::new()
@@ -80,7 +141,7 @@ pub fn run(json: bool) -> Result<()> {
     // Parallel git calls: age + working tree status per branch.
     let git_handles: Vec<_> = branch_specs
         .iter()
-        .map(|(name, _pr_num, _parent, wt_path)| {
+        .map(|(name, _is_managed, _pr_num, _parent, wt_path)| {
             let name = name.clone();
             let wt = wt_path.clone();
             thread::spawn(move || {
@@ -98,6 +159,7 @@ pub fn run(json: bool) -> Result<()> {
     let trunk_age = format_age(git::log_oneline_time(&state.trunk));
 
     // Collect results.
+    let pr_map = pr_handle.join().unwrap_or_default();
     let ci_map = ci_handle.join().unwrap_or_default();
     let git_results: Vec<(Option<u64>, (usize, usize, usize))> = git_handles
         .into_iter()
@@ -109,7 +171,7 @@ pub fn run(json: bool) -> Result<()> {
     let results: Vec<(String, Option<u64>, (usize, usize, usize))> = branch_specs
         .iter()
         .enumerate()
-        .map(|(i, (name, _, _, _))| {
+        .map(|(i, (name, _, _, _, _))| {
             let ci = ci_map.get(name.as_str()).cloned().unwrap_or_default();
             let (age, wt_status) = git_results[i];
             (ci, age, wt_status)
@@ -120,14 +182,18 @@ pub fn run(json: bool) -> Result<()> {
         .into_iter()
         .zip(results)
         .map(
-            |((name, pr_number, parent, wt_path), (ci, age, wt_status))| BranchData {
-                name,
-                pr_number,
-                parent,
-                wt_path,
-                ci,
-                age,
-                wt_status,
+            |((name, is_managed, stored_pr_number, parent, wt_path), (ci, age, wt_status))| {
+                let pr_number = pr_map.get(&name).map(|pr| pr.number).or(stored_pr_number);
+                BranchData {
+                    name,
+                    is_managed,
+                    pr_number,
+                    parent,
+                    wt_path,
+                    ci,
+                    age,
+                    wt_status,
+                }
             },
         )
         .collect();
@@ -151,44 +217,57 @@ pub fn run(json: bool) -> Result<()> {
         let age = format_age(b.age);
         let has_wt = b.wt_path.is_some();
         let port = if has_wt {
-            format!("{}", dev_port(&b.name))
+            format!("{}", dev::dev_port(&b.name))
         } else {
             "-".into()
         };
-        let (s, mo, u) = b.wt_status;
-        let status: String = if has_wt {
-            if s == 0 && mo == 0 && u == 0 {
-                "clean".into()
-            } else {
-                let mut p = Vec::new();
-                if s > 0 {
-                    p.push(format!("{s}S"));
-                }
-                if mo > 0 {
-                    p.push(format!("{mo}M"));
-                }
-                if u > 0 {
-                    p.push(format!("{u}U"));
-                }
-                p.join(" ")
-            }
-        } else {
-            "no worktree".into()
-        };
+        let status = branch_status_label(b.is_managed, has_wt, b.wt_status);
 
         eprintln!("{}", row(m, &b.name, &pr, ci, &age, &port, &status));
     }
 
-    if current != state.trunk && !state.is_managed(&current) {
-        let age = format_age(git::log_oneline_time(&current));
-        eprintln!(
-            "{}",
-            row(" *", &current, "-", "-", &age, "-", "not tracked")
-        );
-        ui::hint("use `ez create` to track branches");
+    if branch_data.iter().any(|b| !b.is_managed) {
+        ui::hint("untracked local branches are shown with status `not tracked`");
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn combined_branch_order_appends_unmanaged_locals_once() {
+        let managed = vec!["feat/a".to_string(), "feat/b".to_string()];
+        let local = vec![
+            "main".to_string(),
+            "feat/b".to_string(),
+            "scratch".to_string(),
+            "hotfix".to_string(),
+        ];
+
+        assert_eq!(
+            combined_branch_order("main", &managed, &local),
+            vec![
+                "feat/a".to_string(),
+                "feat/b".to_string(),
+                "scratch".to_string(),
+                "hotfix".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn branch_status_label_handles_managed_and_unmanaged_variants() {
+        assert_eq!(branch_status_label(true, false, (0, 0, 0)), "no worktree");
+        assert_eq!(branch_status_label(false, false, (0, 0, 0)), "not tracked");
+        assert_eq!(branch_status_label(true, true, (0, 0, 0)), "clean");
+        assert_eq!(
+            branch_status_label(false, true, (1, 2, 3)),
+            "1S 2M 3U; not tracked"
+        );
+    }
 }
 
 fn run_json(state: &StackState, current: &str, branches: &[BranchData]) -> Result<()> {
@@ -216,12 +295,13 @@ fn run_json(state: &StackState, current: &str, branches: &[BranchData]) -> Resul
 
         entries.push(serde_json::json!({
             "branch": b.name,
+            "is_managed": b.is_managed,
             "is_current": b.name == current,
             "parent": b.parent,
             "pr_number": b.pr_number,
             "ci_status": ci,
             "last_activity_secs": b.age,
-            "dev_port": if has_wt { Some(dev_port(&b.name)) } else { None },
+            "dev_port": if has_wt { Some(dev::dev_port(&b.name)) } else { None },
             "worktree_path": b.wt_path,
             "working_tree": wt_status,
         }));

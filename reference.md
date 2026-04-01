@@ -95,7 +95,8 @@ Every mutating command emits JSON to stderr:
 | sync (clean) | `action: "cleaned"`, `reason: "merged"` |
 | push | `pr_number`, `pr_url`, `created` |
 | create | `branch`, `parent`, `worktree` |
-| delete | `branch`, `worktree`, `reparented_children` |
+| delete | `branch`, `worktree`, `dev_port`, `killed_pids`, `reparented_children` |
+| rebase conflict | `action: "conflict"`, `branch`, `parent`, `conflicting_files`, `git_stderr`, `next_command` |
 
 Commit and push receipts also include scope fields when relevant:
 - `scope_defined`

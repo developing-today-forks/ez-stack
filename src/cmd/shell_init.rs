@@ -16,6 +16,15 @@ ez() {{
             fi
             return $_ez_exit
             ;;
+        sync)
+            local _ez_path
+            _ez_path=$(command ez "$@")
+            local _ez_exit=$?
+            if [ -n "$_ez_path" ] && [ -d "$_ez_path" ]; then
+                cd "$_ez_path" || true
+            fi
+            return $_ez_exit
+            ;;
         worktree)
             if [ "$2" = "create" ] || [ "$2" = "delete" ]; then
                 local _ez_path

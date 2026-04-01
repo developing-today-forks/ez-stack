@@ -1,6 +1,7 @@
 use anyhow::{Result, bail};
 
 use crate::cmd::mutation_guard;
+use crate::cmd::rebase_conflict;
 use crate::error::EzError;
 use crate::git;
 use crate::stack::StackState;
@@ -62,13 +63,15 @@ pub fn run(message: &str, all: bool, if_changed: bool, paths: &[String]) -> Resu
         let old_base = meta.parent_head.clone();
 
         ui::info(&format!("Restacking `{child}`..."));
-        let ok = git::rebase_onto(&new_head, &old_base, child)?;
-        if !ok {
-            // Save progress so the user can fix conflicts and continue with `ez restack`.
-            state.save()?;
-            git::checkout(&current)?;
-            ui::hint("Resolve the conflicts manually, then run `ez restack` to continue.");
-            bail!(EzError::RebaseConflict(child.clone()));
+        match git::rebase_onto(&new_head, &old_base, child)? {
+            git::RebaseOutcome::RebasingComplete => {}
+            git::RebaseOutcome::Conflict(conflict) => {
+                // Save progress so the user can fix conflicts and continue with `ez restack`.
+                state.save()?;
+                git::checkout(&current)?;
+                rebase_conflict::report("commit", child, &current, &conflict, "ez restack");
+                bail!(EzError::RebaseConflict(child.clone()));
+            }
         }
 
         let meta = state.get_branch_mut(child)?;
