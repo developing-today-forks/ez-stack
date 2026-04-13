@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01U1moYG6RiLZpi9WR41mixb",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Working in linked worktree `/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child`\n  \u001b[2m→\u001b[0m \u001b[2mEdit and run commands here, not in the main repo checkout.\u001b[0m\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Pushed `test/repoint-child`\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Repointing PR #9 — closing in dezren39/ez-stack and recreating in developing-today-forks/ez-stack\n\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m gh CLI error: pull request create failed: GraphQL: Head sha can't be blank, Base sha can't be blank, No commits between developing-today-forks:test/repoint-parent and dezren39:test/repoint-child, Base ref must be a branch (createPullRequest)\n  → Check authentication: `gh auth status`\n\u001b[2m[exit:2 | 3.9s]\u001b[0m\n",
+  "timestamp": 1776055510727
+}

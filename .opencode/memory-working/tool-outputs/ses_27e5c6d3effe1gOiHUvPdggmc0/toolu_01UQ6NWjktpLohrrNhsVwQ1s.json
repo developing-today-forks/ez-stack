@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01UQ6NWjktpLohrrNhsVwQ1s",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n283:     } else {\n284:         (existing_pr, effective_repo, false)\n285:     };\n286: \n287:     let pr_url = match existing_pr {\n288:         Some(pr) => {\n289:             state.get_branch_mut(branch)?.pr_number = Some(pr.number);\n290: \n291:             // Build the full stack tree (PR number already known for existing PRs).\n292:             let tree_roots = crate::stack_body::build_full_tree(state, branch);\n\n(Showing lines 283-292 of 868. Use offset=293 to continue.)\n</content>",
+  "timestamp": 1776055577887
+}

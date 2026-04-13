@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01XntNmExHzjB1urb7tCzn21",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n274:             let old_number = pr.number;\n275:             ui::warn(&format!(\n276:                 \"PR #{old_number} for `{branch}` targets a different repo than parent `{parent}` — \\\n277:                  skipped repoint (repoint is disabled). Update manually or use `ez push --repoint`.\"\n278:             ));\n279:             (existing_pr, effective_repo, false)\n280:         } else {\n281:             (existing_pr, effective_repo, false)\n282:         }\n283:     } else {\n\n(Showing lines 274-283 of 868. Use offset=284 to continue.)\n</content>",
+  "timestamp": 1776055567904
+}

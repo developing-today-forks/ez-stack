@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_018FbBfLyzM2jRvtmSCF6eVo",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Working in linked worktree `/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child`\n  \u001b[2m→\u001b[0m \u001b[2mEdit and run commands here, not in the main repo checkout.\u001b[0m\n\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m Committed 2a2dc9d on `test/repoint-child`: test: child commit\n\u001b[2m{\"after\":\"2a2dc9d\",\"before\":\"2492a11\",\"branch\":\"test/repoint-child\",\"cmd\":\"commit\",\"deletions\":0,\"files_changed\":1,\"insertions\":1,\"out_of_scope_count\":0,\"out_of_scope_files\":[],\"scope_defined\":false,\"scope_mode\":null}\u001b[0m\n\u001b[2m[ok | 152ms]\u001b[0m\n",
+  "timestamp": 1776055501282
+}

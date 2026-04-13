@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_014mzkyJChvWAQpWE42SfYQv",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "✓ Closed pull request developing-today-forks/ez-stack#4 (test: parent commit)\nDeleted branch test/repoint-child (was 2a2dc9d).\nerror: cannot delete branch 'test/repoint-parent' used by worktree at '/Users/drewry.pope/ez-stack'\nTo https://github.com/dezren39/ez-stack.git\n - [deleted]         test/repoint-child\n - [deleted]         test/repoint-parent\n",
+  "timestamp": 1776055669890
+}
