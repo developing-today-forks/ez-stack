@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_013m6ihpaZhkYqiqvHkko3dW",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "ez not found\nnot in PATH, using ~/.cargo/bin/ez\n",
+  "timestamp": 1776055022658
+}

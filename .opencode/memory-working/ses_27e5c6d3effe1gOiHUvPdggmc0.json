@@ -1,0 +1,83 @@
+{
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "slots": {
+    "error": [
+      {
+        "id": "wm_1776054589883_4nw5nzx",
+        "type": "error",
+        "content": "\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m git command failed: error: the branch 'test/repoint-main' is not fully merged",
+        "source": "tool:bash",
+        "timestamp": 1776054589882,
+        "relevanceScore": 0,
+        "mentions": 1
+      }
+    ],
+    "decision": [],
+    "todo": [],
+    "dependency": []
+  },
+  "pool": [
+    {
+      "id": "wm_1776054881045_8dd8nmf",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs",
+      "source": "tool:read",
+      "timestamp": 1776054881044,
+      "relevanceScore": 2.2980209375,
+      "mentions": 1,
+      "lastEventCounter": 7
+    },
+    {
+      "id": "wm_1776054881045_u612gne",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/AGENTS.md",
+      "source": "tool:read",
+      "timestamp": 1776054881044,
+      "relevanceScore": 2.11531875,
+      "mentions": 1,
+      "lastEventCounter": 7
+    },
+    {
+      "id": "wm_1776054881045_wdkkzvf",
+      "type": "file-path",
+      "content": "AGENTS.md",
+      "source": "tool:read",
+      "timestamp": 1776054881044,
+      "relevanceScore": 1.900375,
+      "mentions": 1,
+      "lastEventCounter": 7
+    },
+    {
+      "id": "wm_1776054881046_y7kd27l",
+      "type": "file-path",
+      "content": ".git/ez/stack.js",
+      "source": "tool:read",
+      "timestamp": 1776054881044,
+      "relevanceScore": 1.6475,
+      "mentions": 1,
+      "lastEventCounter": 7
+    },
+    {
+      "id": "wm_1776054881046_smpo6jz",
+      "type": "file-path",
+      "content": ".agents/skills/ez-workflow/SKILL.md",
+      "source": "tool:read",
+      "timestamp": 1776054881044,
+      "relevanceScore": 1.35,
+      "mentions": 1,
+      "lastEventCounter": 7
+    },
+    {
+      "id": "wm_1776054887832_oinn1zb",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/sync.rs",
+      "source": "tool:read",
+      "timestamp": 1776054887832,
+      "relevanceScore": 1,
+      "mentions": 1,
+      "lastEventCounter": 7
+    }
+  ],
+  "eventCounter": 7,
+  "updatedAt": "2026-04-13T04:34:47.832Z"
+}
