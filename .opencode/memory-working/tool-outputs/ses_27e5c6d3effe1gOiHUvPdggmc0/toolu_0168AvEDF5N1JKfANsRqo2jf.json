@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_0168AvEDF5N1JKfANsRqo2jf",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "  Installing ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)\n    Updating crates.io index\n     Locking 104 packages to latest Rust 1.85 compatible versions\n      Adding console v0.15.11 (available: v0.16.3)\n      Adding dialoguer v0.11.0 (available: v0.12.0)\n      Adding indicatif v0.17.11 (available: v0.18.4)\n      Adding wasip2 v1.0.1+wasi-0.2.4 (available: v1.0.2+wasi-0.2.9, requires Rust 1.87.0)\n      Adding wasip3 v0.4.0+wasi-0.3.0-rc-2026-01-06 (requires Rust 1.87.0)\n      Adding wit-bindgen v0.51.0 (requires Rust 1.87.0)\n      Adding wit-bindgen-core v0.51.0 (requires Rust 1.87.0)\n      Adding wit-bindgen-rust v0.51.0 (requires Rust 1.87.0)\n   Compiling ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)\n    Finished `release` profile [optimized] target(s) in 21.52s\n   Replacing /Users/drewry.pope/.cargo/bin/ez\n    Replaced package `ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)` with `ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)` (executable `ez`)\nwarning: be sure to add `/Users/drewry.pope/.cargo/bin` to your PATH to be able to run the installed binaries\n",
+  "timestamp": 1776055425993
+}

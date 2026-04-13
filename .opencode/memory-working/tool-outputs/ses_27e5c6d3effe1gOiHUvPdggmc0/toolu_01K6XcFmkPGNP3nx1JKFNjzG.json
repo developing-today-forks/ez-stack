@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01K6XcFmkPGNP3nx1JKFNjzG",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs</path>\n<type>file</type>\n<content>\n323: pub fn repo_name_from_url(url: &str) -> Option<String> {\n324:     let cleaned = url.trim_end_matches(\".git\").trim_end_matches('/');\n325:     if let Some(rest) = cleaned.strip_prefix(\"https://github.com/\") {\n326:         Some(rest.to_string())\n327:     } else if let Some(rest) = cleaned.strip_prefix(\"git@github.com:\") {\n328:         Some(rest.to_string())\n329:     } else {\n330:         None\n331:     }\n332: }\n333: \n334: pub fn repo_name() -> Result<String> {\n335:     let output = run_gh(&[\n336:         \"repo\",\n337:         \"view\",\n\n(Showing lines 323-337 of 1016. Use offset=338 to continue.)\n</content>",
+  "timestamp": 1776055296591
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01HsDzjCcisGgiTn3ARQndUu",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Working in linked worktree `/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child`\n  \u001b[2m→\u001b[0m \u001b[2mEdit and run commands here, not in the main repo checkout.\u001b[0m\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Fetching from `fork`...\n\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Could not update PR #9 base for `test/repoint-child` to `main`: gh CLI error: GraphQL: Could not resolve to a PullRequest with the number of 9. (repository.pullRequest)\n  → Check authentication: `gh auth status`\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Cleaned up `test/repoint-parent` (merged)\n\u001b[2m{\"action\":\"cleaned\",\"branch\":\"test/repoint-parent\",\"cmd\":\"sync\",\"reason\":\"merged\"}\u001b[0m\n\u001b[2m{\"action\":\"preflight\",\"cmd\":\"sync\",\"summary\":{\"branches_checked\":1,\"merge_commits\":0,\"needs_restack\":1,\"redundant_branches\":0,\"stale_metadata\":0}}\u001b[0m\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Restacked `test/repoint-child` onto `main`\n\u001b[2m{\"action\":\"restacked\",\"after\":\"d671c87\",\"before\":\"2be2cdb\",\"branch\":\"test/repoint-child\",\"cmd\":\"sync\",\"parent\":\"main\",\"redundant_commits\":0,\"safe_rebase_mode\":false}\u001b[0m\n\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m Synced (1 cleaned, 1 restacked)\n\u001b[2m[ok | 3.4s]\u001b[0m\n",
+  "timestamp": 1776055161606
+}

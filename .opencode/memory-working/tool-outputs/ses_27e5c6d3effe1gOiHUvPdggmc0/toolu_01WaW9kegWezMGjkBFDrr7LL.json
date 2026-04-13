@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01WaW9kegWezMGjkBFDrr7LL",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Branch `test/repoint-child` is in worktree `/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child`\n  \u001b[2m→\u001b[0m \u001b[2mIf your shell didn't change directory, run:\n  cd /Users/drewry.pope/ez-stack/.worktrees/test-repoint-child\n  Or enable auto-cd: eval \"$(ez shell-init)\"\u001b[0m\n/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child\n\u001b[2m[ok | 36ms]\u001b[0m\n",
+  "timestamp": 1776055073286
+}

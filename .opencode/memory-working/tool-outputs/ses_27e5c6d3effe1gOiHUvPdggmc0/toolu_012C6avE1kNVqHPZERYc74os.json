@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_012C6avE1kNVqHPZERYc74os",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 3 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs:\n  Line 35: pub fn create_pr(title: &str, body: &str, base: &str, head: &str, draft: bool) -> Result<PrInfo> {\n  Line 39: pub fn create_pr_in_repo(\n  Line 782:     fn create_pr_fails_when_gh_returns_non_pr_url() {",
+  "timestamp": 1776055257942
+}

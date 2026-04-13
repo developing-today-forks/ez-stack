@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01Bt3UXuZjAvqBxw1pvJUk7z",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m git command failed: error: Your local changes to the following files would be overwritten by checkout:\n\t.opencode/memory-working/ses_27e5c6d3effe1gOiHUvPdggmc0.json\n\t.opencode/memory-working/ses_27e5c6d3effe1gOiHUvPdggmc0_pressure.json\nPlease commit your changes or stash them before you switch branches.\nAborting\n\u001b[2m[exit:1 | 51ms]\u001b[0m\n",
+  "timestamp": 1776055145533
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_012Atn1Wa2TFCnM9KXDvAdqW",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m Created `test/repoint-child` → /Users/drewry.pope/ez-stack/.worktrees/test-repoint-child\n  \u001b[2m→\u001b[0m \u001b[2mEdit files under `/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child`. This branch lives in a linked worktree, not the main repo checkout.\u001b[0m\n\u001b[2m{\"branch\":\"test/repoint-child\",\"cmd\":\"create\",\"head\":\"58ec13c\",\"parent\":\"test/repoint-parent\",\"scope_defined\":false,\"scope_mode\":null,\"worktree\":\"/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child\"}\u001b[0m\n/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child\n\u001b[2m[ok | 129ms]\u001b[0m\n",
+  "timestamp": 1776055067821
+}

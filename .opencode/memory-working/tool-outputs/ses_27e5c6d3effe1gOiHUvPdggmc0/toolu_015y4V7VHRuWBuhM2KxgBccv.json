@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_015y4V7VHRuWBuhM2KxgBccv",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "{\"active_edit_root\":\"/Users/drewry.pope/ez-stack/.worktrees/test-repoint-child\",\"branch\":\"test/repoint-child\",\"children\":[],\"commits\":1,\"depth\":1,\"in_linked_worktree\":true,\"is_draft\":false,\"modified_files\":0,\"needs_restack\":false,\"parent\":\"main\",\"pr_number\":3,\"pr_state\":\"OPEN\",\"pr_url\":\"https://github.com/developing-today-forks/ez-stack/pull/3\",\"scope\":null,\"scope_defined\":false,\"scope_mode\":null,\"staged_files\":0,\"untracked_files\":0}\n\u001b[2m[ok | 1.2s]\u001b[0m\n",
+  "timestamp": 1776055197328
+}

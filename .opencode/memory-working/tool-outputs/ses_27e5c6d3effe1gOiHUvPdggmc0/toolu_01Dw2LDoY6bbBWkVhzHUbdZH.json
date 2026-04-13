@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01Dw2LDoY6bbBWkVhzHUbdZH",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs</path>\n<type>file</type>\n<content>\n938:     fn repo_name_from_url_returns_none_for_non_github() {\n939:         assert_eq!(\n940:             repo_name_from_url(\"https://gitlab.com/user/repo.git\"),\n941:             None\n942:         );\n943:     }\n944: \n945:     #[test]\n946:     fn cross_fork_head_no_repo_returns_bare_branch() {\n947:         assert_eq!(cross_fork_head(\"feat/x\", \"origin\", None), \"feat/x\");\n948:     }\n949: \n950:     #[test]\n951:     fn cross_fork_head_same_owner_returns_bare_branch() {\n952:         let _guard = take_env_lock();\n953:         let repo = crate::test_support::init_git_repo(\"cross-fork-same\");\n954:         let _cwd = crate::test_support::CwdGuard::enter(&repo);\n955:         crate::git::add_remote(\"origin\", \"https://github.com/upstream/repo.git\").ok();\n956:         assert_eq!(\n957:             cross_fork_head(\"feat/x\", \"origin\", Some(\"upstream/repo\")),\n\n(Showing lines 938-957 of 1028. Use offset=958 to continue.)\n</content>",
+  "timestamp": 1776055360777
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01Cyaoj7nfYiRf3QUncyJzrE",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 11 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs:\n  Line 323: pub fn repo_name_from_url(url: &str) -> Option<String> {\n  Line 374:             if let Some(repo) = repo_name_from_url(&url) {\n  Line 389:                         if let Some(repo) = repo_name_from_url(&url) {\n  Line 902:     fn repo_name_from_url_parses_https() {\n  Line 904:             repo_name_from_url(\"https://github.com/user/repo.git\"),\n  Line 910:     fn repo_name_from_url_parses_https_without_dot_git() {\n  Line 912:             repo_name_from_url(\"https://github.com/user/repo\"),\n  Line 918:     fn repo_name_from_url_parses_ssh() {\n  Line 920:             repo_name_from_url(\"git@github.com:user/repo.git\"),\n  Line 926:     fn repo_name_from_url_returns_none_for_non_github() {\n  Line 928:             repo_name_from_url(\"https://gitlab.com/user/repo.git\"),",
+  "timestamp": 1776055280561
+}

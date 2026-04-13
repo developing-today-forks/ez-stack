@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01EJVZg1vXkzierw4Wjuwt2g",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "test stack::tests::effective_pr_repo_none_when_nothing_set ... ok\nInitialized empty Git repository in /private/var/folders/k9/k2ksrtk174g4lmbcnfvn4xv40000gp/T/ez-tests-pr-repo-empty-config-12668-1776055387890994000/.git/\n[main (root-commit) da08175] initial\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\ntest stack::tests::effective_pr_repo_skips_empty_config ... ok\nInitialized empty Git repository in /private/var/folders/k9/k2ksrtk174g4lmbcnfvn4xv40000gp/T/ez-tests-pr-repo-unknown-branch-12668-1776055387969171000/.git/\n[main (root-commit) 6370285] initial\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\ntest stack::tests::effective_pr_repo_unknown_branch_falls_back_to_config ... ok\ntest stack::tests::test_meta_dir_ends_with_ez ... ok\n\ntest result: ok. 289 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.71s\n\n",
+  "timestamp": 1776055388064
+}
