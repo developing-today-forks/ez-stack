@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01LUAPxewYeDjWreQSZR88Rw",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "rm '.opencode/memory-working/ses_27e5c6d3effe1gOiHUvPdggmc0_pressure.json'\n?? .opencode/\n?? .worktrees/\n",
+  "timestamp": 1776055954680
+}

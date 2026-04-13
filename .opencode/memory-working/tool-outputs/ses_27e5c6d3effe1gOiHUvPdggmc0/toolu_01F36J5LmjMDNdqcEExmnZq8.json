@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01F36J5LmjMDNdqcEExmnZq8",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "Dropped refs/stash@{0} (d7b005b9bab53fcec651f8c51941e26f8155b862)\nerror: path '.opencode/memory-working/ses_27e5c6d3effe1gOiHUvPdggmc0_pressure.json' is unmerged\nRemoving .opencode/memory-working/ses_27e5c6d3effe1gOiHUvPdggmc0.json\nRemoving .opencode/memory-working/tool-outputs/\n",
+  "timestamp": 1776055897036
+}
