@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01DfJt5XmYtgmeg7gRUU9AN5",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 9 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/cmd/push.rs:\n  Line 306:                 let current_body = github::get_pr_body_in_repo(pr.number, effective_repo.as_deref())\n  Line 438:     let messages = git::log_full_messages(&range).unwrap_or_default();\n  Line 507:         let current_body = match github::get_pr_body_in_repo(pr_number, effective_repo.as_deref()) {\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/commit_refs.rs:\n  Line 279:     crate::github::resolve_issue_or_pr(repo, number)\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/github.rs:\n  Line 384:     get_pr_body_in_repo(pr_number, None)\n  Line 387: pub fn get_pr_body_in_repo(pr_number: u64, repo: Option<&str>) -> Result<String> {\n  Line 551: pub fn resolve_issue_or_pr(repo: &str, number: u64) -> Option<String> {\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/git.rs:\n  Line 590: pub fn log_full_messages(range: &str) -> Result<Vec<(String, String)>> {\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/cmd/pr_edit.rs:\n  Line 33:         let body_current = github::get_pr_body_in_repo(pr_number, effective_repo.as_deref())?;",
+  "timestamp": 1776044279868
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01UrCRgTChjP6Xb4mkLUkv3n",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Working in linked worktree `/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge`\n  \u001b[2m→\u001b[0m \u001b[2mEdit and run commands here, not in the main repo checkout.\u001b[0m\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Pushed `feat/pr-body`\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Updated PR #5 body\n\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m PR: https://github.com/dezren39/ez-stack/pull/5\n\u001b[2m{\"branch\":\"feat/pr-body\",\"cmd\":\"push\",\"created\":false,\"out_of_scope_count\":0,\"out_of_scope_files\":[],\"pr_number\":5,\"pr_url\":\"https://github.com/dezren39/ez-stack/pull/5\",\"scope_defined\":false,\"scope_mode\":null}\u001b[0m\n\u001b[2m[ok | 5.4s]\u001b[0m\n",
+  "timestamp": 1776044508140
+}

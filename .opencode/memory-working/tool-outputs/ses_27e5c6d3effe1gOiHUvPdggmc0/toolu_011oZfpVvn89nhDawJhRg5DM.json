@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_011oZfpVvn89nhDawJhRg5DM",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n234:             match (&pr_current_repo, &target_repo) {\n235:                 (Some(current), Some(target)) => current != target,\n236:                 (Some(_), None) => state.get_branch(branch).ok().and_then(|m| m.pr_repo.as_ref()).is_some(),\n237:                 _ => false,\n238:             }\n239:         };\n240:         let no_repoint = state.effective_no_repoint(branch);\n241:         if needs_repoint && !no_repoint {\n242:             let old_number = pr.number;\n243:             let old_url = pr.url.clone();\n244:             ui::info(&format!(\n245:                 \"Repointing PR #{old_number} — closing in {} and recreating in {}\",\n246:                 pr_current_repo.as_deref().unwrap_or(\"default repo\"),\n247:                 target_repo.as_deref().unwrap_or(\"default repo\"),\n248:             ));\n249:             // Attempt the close, but DON'T mutate state yet — if create fails\n250:             // we want the old PR info intact for recovery.\n251:             if let Err(e) = github::close_pr_in_repo(old_number, pr_current_repo.as_deref()) {\n252:                 ui::warn(&format!(\n253:                     \"Could not close old PR #{old_number} ({old_url}): {e}\\n  \\\n\n(Showing lines 234-253 of 856. Use offset=254 to continue.)\n</content>",
+  "timestamp": 1776054046702
+}

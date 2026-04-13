@@ -1,0 +1,21 @@
+{
+  "sessionID": "ses_27cbbd6f7ffe3gnNQmjyAdnrJo",
+  "blocks": {
+    "goal": {
+      "value": "Implement PR-C for ez-stack: (1) Restack across worktrees with detach-rebase-reattach pattern in restack/sync/move/commit/amend, (2) Fix ez switch messaging with no_cd_required flag. No commit — just code changes + verify compile/tests.",
+      "charLimit": 1000,
+      "lastModified": "2026-04-12T19:56:21.033Z"
+    },
+    "progress": {
+      "value": "Feature 1 (worktree detach-rebase-reattach): ✅ All 6 steps done\nFeature 2 (switch messaging): ✅ All 4 steps done\n✅ cargo check --tests: clean\n✅ cargo test: 162 passed, 0 failed",
+      "charLimit": 2000,
+      "lastModified": "2026-04-12T19:59:54.942Z"
+    },
+    "context": {
+      "value": "",
+      "charLimit": 1500,
+      "lastModified": "2026-04-12T19:56:21.033Z"
+    }
+  },
+  "updatedAt": "2026-04-12T19:59:54.942Z"
+}

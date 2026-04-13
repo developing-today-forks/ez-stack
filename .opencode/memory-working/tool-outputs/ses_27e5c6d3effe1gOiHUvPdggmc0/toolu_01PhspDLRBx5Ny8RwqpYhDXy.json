@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01PhspDLRBx5Ny8RwqpYhDXy",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/sync.rs</path>\n<type>file</type>\n<content>\n370:             ));\n371:             ui::receipt(&serde_json::json!({\n372:                 \"cmd\": \"sync\",\n373:                 \"branch\": branch_name,\n374:                 \"action\": \"cleanup_skipped\",\n375:                 \"reason\": \"branch_delete_failed\",\n376:                 \"parent\": parent,\n377:             }));\n378:             continue;\n379:         }\n380: \n381:         if is_managed {\n382:             let parent_name = parent.clone().expect(\"managed branch should have a parent\");\n383:             let _ = state.reparent_children_preserving_parent_head(branch_name, &parent_name)?;\n384: \n385:             state.remove_branch(branch_name);\n386:         }\n387: \n388:         let cleanup_label = if cleanup_reason == \"pr_closed\" {\n389:             \"PR closed\"\n\n(Showing lines 370-389 of 700. Use offset=390 to continue.)\n</content>",
+  "timestamp": 1776052117098
+}

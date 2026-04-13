@@ -1,0 +1,211 @@
+{
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "slots": {
+    "error": [
+      {
+        "id": "wm_1776054413234_8nqsugp",
+        "type": "error",
+        "content": "\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m gh CLI error: pull request create failed: GraphQL: Head sha can't be blank, Base sha can't be blank, No commits between developing-today-forks:feat/config and dezren39:test/repoint",
+        "source": "tool:bash",
+        "timestamp": 1776054413233,
+        "relevanceScore": 0,
+        "mentions": 1
+      },
+      {
+        "id": "wm_1776054387294_0t40i7t",
+        "type": "error",
+        "content": "\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m error: unexpected argument '--repoint' found",
+        "source": "tool:bash",
+        "timestamp": 1776054387292,
+        "relevanceScore": 0,
+        "mentions": 1
+      },
+      {
+        "id": "wm_1776054328716_s3cvr4y",
+        "type": "error",
+        "content": "test cmd::navigate::tests::up_target_errors_without_children ... ok",
+        "source": "tool:bash",
+        "timestamp": 1776054328715,
+        "relevanceScore": 0,
+        "mentions": 1
+      }
+    ],
+    "decision": [],
+    "todo": [],
+    "dependency": []
+  },
+  "pool": [
+    {
+      "id": "wm_1775996629450_eqxpveh",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/git.rs",
+      "source": "tool:read",
+      "timestamp": 1776037189100,
+      "relevanceScore": 112.86719344723998,
+      "mentions": 34,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1775996629394_a45t3l9",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/cmd/checkout.rs",
+      "source": "tool:read",
+      "timestamp": 1776031770225,
+      "relevanceScore": 102.90832343718938,
+      "mentions": 31,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776032577915_r9mkng8",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-fork/src/github.rs",
+      "source": "tool:grep",
+      "timestamp": 1776038440778,
+      "relevanceScore": 96.26907676382234,
+      "mentions": 29,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776039816013_ycyc0ys",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/github.rs",
+      "source": "tool:grep",
+      "timestamp": 1776051000401,
+      "relevanceScore": 79.67096005893431,
+      "mentions": 24,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1775996634725_fe9azkz",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/cli.rs",
+      "source": "tool:read",
+      "timestamp": 1776029954562,
+      "relevanceScore": 69.71209007035411,
+      "mentions": 21,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776019235189_key70k4",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/cmd/push.rs",
+      "source": "tool:read",
+      "timestamp": 1776032531304,
+      "relevanceScore": 69.71209007035411,
+      "mentions": 21,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776032566474_iv8dir1",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-fork/src/cmd/push.rs",
+      "source": "tool:grep",
+      "timestamp": 1776038539519,
+      "relevanceScore": 69.71209007035411,
+      "mentions": 21,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1775996628842_25hyt3v",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/cmd/create.rs",
+      "source": "tool:read",
+      "timestamp": 1776031778671,
+      "relevanceScore": 59.75322006030352,
+      "mentions": 18,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776052220596_5ivlhzs",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs",
+      "source": "tool:read",
+      "timestamp": 1776054164997,
+      "relevanceScore": 56.259130672954996,
+      "mentions": 18,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1775998907781_7q3zy32",
+      "type": "file-path",
+      "content": "stack.js",
+      "source": "tool:read",
+      "timestamp": 1776053862710,
+      "relevanceScore": 53.01786470588978,
+      "mentions": 16,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776000091839_6643vii",
+      "type": "file-path",
+      "content": ".git/ez/stack.js",
+      "source": "tool:read",
+      "timestamp": 1776052182546,
+      "relevanceScore": 49.79434734827558,
+      "mentions": 15,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776033787008_h0brfj1",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-fork/src/git.rs",
+      "source": "tool:grep",
+      "timestamp": 1776038494619,
+      "relevanceScore": 43.15510337688587,
+      "mentions": 13,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776003952827_e2tr6jv",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/cmd/restack.rs",
+      "source": "tool:grep",
+      "timestamp": 1776023652078,
+      "relevanceScore": 36.51585670351882,
+      "mentions": 11,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776051721995_lr05y37",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs",
+      "source": "tool:read",
+      "timestamp": 1776053909495,
+      "relevanceScore": 36.019461547489584,
+      "mentions": 11,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1775997889688_naa5pp3",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/stack.rs",
+      "source": "tool:grep",
+      "timestamp": 1776032531779,
+      "relevanceScore": 33.19623336683529,
+      "mentions": 10,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776029580248_gce7vgg",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/src/github.rs",
+      "source": "tool:grep",
+      "timestamp": 1776032480189,
+      "relevanceScore": 33.19623336683529,
+      "mentions": 10,
+      "lastEventCounter": 1000
+    },
+    {
+      "id": "wm_1776035460004_kac1w8p",
+      "type": "file-path",
+      "content": "/Users/drewry.pope/ez-stack/.worktrees/feat-fork/src/stack.rs",
+      "source": "tool:read",
+      "timestamp": 1776038800245,
+      "relevanceScore": 33.19623336683529,
+      "mentions": 10,
+      "lastEventCounter": 1000
+    }
+  ],
+  "eventCounter": 1010,
+  "updatedAt": "2026-04-13T04:26:53.234Z"
+}

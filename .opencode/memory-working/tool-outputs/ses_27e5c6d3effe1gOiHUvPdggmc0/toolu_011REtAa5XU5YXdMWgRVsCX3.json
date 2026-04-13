@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_011REtAa5XU5YXdMWgRVsCX3",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "/Users/drewry.pope/ez-stack                                     f22f18f [test/repoint-copy]\n/Users/drewry.pope/ez-stack/.worktrees/feat-fork                c9f9b72 [feat/fork]\n/Users/drewry.pope/ez-stack/.worktrees/feat-integration-fixes   cec74c5 (detached HEAD)\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge         c7724d7 [feat/pr-body]\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge 947f9ed [feat/repoint-after-merge]\n",
+  "timestamp": 1776054297143
+}

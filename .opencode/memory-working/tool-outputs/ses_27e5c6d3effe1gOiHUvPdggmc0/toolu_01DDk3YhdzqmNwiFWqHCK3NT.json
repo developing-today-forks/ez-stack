@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01DDk3YhdzqmNwiFWqHCK3NT",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Pushed `test/repoint-copy`\n\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m gh CLI error: pull request create failed: GraphQL: Head sha can't be blank, Base sha can't be blank, No commits between developing-today-forks:feat/config and dezren39:test/repoint-copy, Base ref must be a branch (createPullRequest)\n  → Check authentication: `gh auth status`\n\u001b[2m[exit:2 | 3.4s]\u001b[0m\n",
+  "timestamp": 1776053072387
+}

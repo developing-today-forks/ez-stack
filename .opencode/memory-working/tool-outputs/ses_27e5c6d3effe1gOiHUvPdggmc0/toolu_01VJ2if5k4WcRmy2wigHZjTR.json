@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01VJ2if5k4WcRmy2wigHZjTR",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "/Users/drewry.pope/.local/share/uv/tools/ez-stack/lib/python3.12/site-packages/ez_stack/bin/ez: Mach-O 64-bit arm64 executable, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|PIE|HAS_TLV_DESCRIPTORS>\n",
+  "timestamp": 1776044491224
+}

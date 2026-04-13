@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01MVDxU7Cs383SDV4CNS3Ktj",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "{\n    \"active_edit_root\": \"/Users/drewry.pope/ez-stack\",\n    \"branch\": \"test/repoint-copy\",\n    \"children\": [],\n    \"commits\": 1,\n    \"depth\": 2,\n    \"in_linked_worktree\": false,\n    \"is_draft\": true,\n    \"modified_files\": 0,\n    \"needs_restack\": false,\n    \"parent\": \"feat/config\",\n    \"pr_number\": 6,\n    \"pr_state\": \"OPEN\",\n    \"pr_url\": \"https://github.com/dezren39/ez-stack/pull/6\",\n    \"scope\": null,\n    \"scope_defined\": false,\n    \"scope_mode\": null,\n    \"staged_files\": 0,\n    \"untracked_files\": 2\n}\n",
+  "timestamp": 1776053017517
+}

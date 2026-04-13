@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_016YXcq3rnG8RAqw3SzaeYQx",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs</path>\n<type>file</type>\n<content>\n19:     (\"no_pr\", \"Default push to skip PR creation (true/false)\"),\n20:     (\"rerere\", \"Enable git rerere for conflict recording (true/false)\"),\n21:     (\"no_repoint\", \"Block cross-repo PR repointing (true/false)\"),\n22: ];\n23: \n\n(Showing lines 19-23 of 1033. Use offset=24 to continue.)\n</content>",
+  "timestamp": 1776053923660
+}

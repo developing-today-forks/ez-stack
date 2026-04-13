@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01L4w4t9j3Aoq8qBCvC5HE7N",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Working in linked worktree `/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge`\n  \u001b[2m→\u001b[0m \u001b[2mEdit and run commands here, not in the main repo checkout.\u001b[0m\n\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m Committed 7308519 on `feat/pr-body`: feat: wire ez-marker body generation into push/submit with contiguous stack updates\n\u001b[2m{\"after\":\"7308519\",\"before\":\"17c1d23\",\"branch\":\"feat/pr-body\",\"cmd\":\"commit\",\"deletions\":22,\"files_changed\":3,\"insertions\":201,\"out_of_scope_count\":0,\"out_of_scope_files\":[],\"scope_defined\":false,\"scope_mode\":null}\u001b[0m\n\u001b[2m[ok | 174ms]\u001b[0m\n",
+  "timestamp": 1776044084030
+}

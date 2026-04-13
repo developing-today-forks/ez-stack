@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_0125VnHpvcVDc9QdfxXzyxVy",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/checkout.rs</path>\n<type>file</type>\n<content>\n216:                 scope_mode: None,\n217:                 no_repoint: None,\n218:             },\n\n(Showing lines 216-218 of 369. Use offset=219 to continue.)\n</content>",
+  "timestamp": 1776054129244
+}

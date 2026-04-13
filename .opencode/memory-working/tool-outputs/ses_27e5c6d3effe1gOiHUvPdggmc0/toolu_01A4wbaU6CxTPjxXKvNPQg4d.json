@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01A4wbaU6CxTPjxXKvNPQg4d",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n843:     }\n844: \n845:     #[test]\n846:     fn no_repoint_config_suppresses_repoint() {\n847:         // Even when repos differ, no_repoint should suppress\n848:         let mut state = StackState::new(\"main\".to_string());\n849:         state.add_branch(\"feat/a\", \"main\", \"aaa\", None, None);\n850:         state.get_branch_mut(\"feat/a\").unwrap().pr_repo = Some(\"upstream/repo\".to_string());\n851:         state.get_branch_mut(\"feat/a\").unwrap().no_repoint = Some(true);\n852:         state.repo = Some(\"fork/repo\".to_string());\n853: \n854:         assert!(state.effective_no_repoint(\"feat/a\"), \"should be suppressed\");\n855:     }\n856: }\n\n(End of file - total 856 lines)\n</content>",
+  "timestamp": 1776054164997
+}

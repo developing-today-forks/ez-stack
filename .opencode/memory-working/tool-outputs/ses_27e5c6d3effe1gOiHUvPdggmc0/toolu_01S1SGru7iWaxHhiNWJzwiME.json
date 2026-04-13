@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01S1SGru7iWaxHhiNWJzwiME",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "error[E0063]: missing field `no_repoint` in initializer of `BranchMeta`\nerror[E0063]: missing field `no_repoint` in initializer of `stack::StackState`\nerror[E0063]: missing field `no_repoint` in initializer of `BranchMeta`\nerror[E0063]: missing field `no_repoint` in initializer of `stack::StackState`\nerror[E0063]: missing field `no_repoint` in initializer of `BranchMeta`\nerror[E0063]: missing field `no_repoint` in initializer of `BranchMeta`\nerror[E0063]: missing field `no_repoint` in initializer of `stack::StackState`\n",
+  "timestamp": 1776051957714
+}

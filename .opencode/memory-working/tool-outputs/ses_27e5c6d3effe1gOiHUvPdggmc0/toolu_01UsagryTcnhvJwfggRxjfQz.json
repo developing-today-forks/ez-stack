@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01UsagryTcnhvJwfggRxjfQz",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs</path>\n<type>file</type>\n<content>\n220:         let data = serde_json::to_string_pretty(self)?;\n221:         fs::write(Self::state_path()?, data)?;\n222:         Ok(())\n223:     }\n224: \n225:     pub fn add_branch(\n226:         &mut self,\n227:         name: &str,\n228:         parent: &str,\n229:         parent_head: &str,\n230:         scope: Option<Vec<String>>,\n231:         scope_mode: Option<ScopeMode>,\n232:     ) {\n233:         self.branches.insert(\n234:             name.to_string(),\n235:             BranchMeta {\n236:                 name: name.to_string(),\n237:                 parent: parent.to_string(),\n238:                 parent_head: parent_head.to_string(),\n239:                 pr_number: None,\n240:                 pr_repo: None,\n241:                 push_remote: None,\n242:                 scope,\n243:                 scope_mode,\n244:             },\n\n(Showing lines 220-244 of 701. Use offset=245 to continue.)\n</content>",
+  "timestamp": 1776051906321
+}

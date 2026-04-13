@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01YYKfn1miLwsxCYdEWpdy68",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n191: pub fn push_or_update_pr(\n192:     state: &mut StackState,\n193:     branch: &str,\n194:     parent: &str,\n195:     draft: bool,\n196:     title_override: Option<&str>,\n197:     body_override: Option<&str>,\n198:     body_explicitly_set: bool,\n199:     repo_override: Option<&str>,\n200: ) -> Result<String> {\n201:     // Normalize repo shorthand (e.g. \"fork\" → \"owner/repo\" from remote URL).\n202:     let resolved_override: Option<String> =\n203:         repo_override.map(|s| github::resolve_repo_shorthand(s));\n204:     // Resolve effective repo: CLI flag > stored per-branch > global config > None\n205:     let effective_repo: Option<String> = resolved_override\n\n(Showing lines 191-205 of 730. Use offset=206 to continue.)\n</content>",
+  "timestamp": 1776052300292
+}

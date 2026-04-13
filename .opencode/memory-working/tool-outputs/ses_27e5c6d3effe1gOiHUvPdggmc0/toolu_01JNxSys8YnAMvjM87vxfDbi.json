@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01JNxSys8YnAMvjM87vxfDbi",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "230 |         StackState {\n    |         ^^^^^^^^^^ missing `no_repoint`\n\nFor more information about this error, try `rustc --explain E0063`.\nerror: could not compile `ez-stack` (bin \"ez\" test) due to 7 previous errors\n",
+  "timestamp": 1776051944492
+}

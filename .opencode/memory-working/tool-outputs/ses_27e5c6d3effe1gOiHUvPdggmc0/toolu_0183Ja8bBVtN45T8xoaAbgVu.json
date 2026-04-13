@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_0183Ja8bBVtN45T8xoaAbgVu",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "{\n    \"active_edit_root\": \"/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge\",\n    \"branch\": \"feat/pr-body\",\n    \"children\": [],\n    \"commits\": 3,\n    \"depth\": 6,\n    \"in_linked_worktree\": true,\n    \"is_draft\": true,\n    \"modified_files\": 0,\n    \"needs_restack\": false,\n    \"parent\": \"feat/local-merge\",\n    \"pr_number\": 5,\n    \"pr_state\": \"OPEN\",\n    \"pr_url\": \"https://github.com/dezren39/ez-stack/pull/5\",\n    \"scope\": null,\n    \"scope_defined\": false,\n    \"scope_mode\": null,\n    \"staged_files\": 0,\n    \"untracked_files\": 0\n}\n",
+  "timestamp": 1776044425653
+}

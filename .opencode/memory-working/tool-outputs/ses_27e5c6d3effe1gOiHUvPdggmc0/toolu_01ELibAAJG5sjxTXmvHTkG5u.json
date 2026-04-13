@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01ELibAAJG5sjxTXmvHTkG5u",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cli.rs</path>\n<type>file</type>\n<content>\n844:     fn parses_push_all_files_combined_short_flags() {\n845:         let cli = Cli::try_parse_from([\"ez\", \"push\", \"-Am\", \"feat: ship new files\"])\n846:             .expect(\"parse push -Am\");\n847: \n848:         match cli.command {\n849:             Commands::Push {\n850:                 message,\n851:                 stage_all,\n852:                 stage_all_files,\n853:                 no_pr,\n854:                 no_draft,\n855:                 ..\n856:             } => {\n857:                 assert_eq!(message.as_deref(), Some(\"feat: ship new files\"));\n858:                 assert!(!stage_all);\n859:                 assert!(stage_all_files);\n860:                 assert!(!no_pr);\n861:                 assert!(!no_draft);\n862:             }\n863:             _ => panic!(\"expected push command\"),\n864:         }\n865:     }\n866: \n867:     #[test]\n868:     fn parses_push_no_pr_flag() {\n869:         let cli = Cli::try_parse_from([\"ez\", \"push\", \"--no-pr\"]).expect(\"parse push --no-pr\");\n870: \n871:         match cli.command {\n872:             Commands::Push { no_pr, draft, .. } => {\n873:                 assert!(no_pr);\n\n(Showing lines 844-873 of 1118. Use offset=874 to continue.)\n</content>",
+  "timestamp": 1776052477798
+}

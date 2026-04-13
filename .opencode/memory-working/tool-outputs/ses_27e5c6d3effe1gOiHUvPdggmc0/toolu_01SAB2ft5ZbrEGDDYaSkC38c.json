@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01SAB2ft5ZbrEGDDYaSkC38c",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 9 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cli.rs:\n  Line 844:     fn parses_push_all_files_combined_short_flags() {\n  Line 849:             Commands::Push {\n  Line 872:             Commands::Push { no_pr, draft, .. } => {\n  Line 892:             Commands::Push {\n  Line 1025:             Commands::Push { repo, no_pr, .. } => {\n  Line 1041:             Commands::Push {\n  Line 1071:             Commands::Push { repo, remote, .. } => {\n  Line 1084:             Commands::Push { remote, .. } => {\n  Line 1098:             Commands::Push { remote, repo, .. } => {",
+  "timestamp": 1776052468448
+}

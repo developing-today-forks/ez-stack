@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01FggVMyRYQ14R7Nt1h8v97P",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 1 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs:\n  Line 244:                 no_repoint: None,",
+  "timestamp": 1776053902752
+}

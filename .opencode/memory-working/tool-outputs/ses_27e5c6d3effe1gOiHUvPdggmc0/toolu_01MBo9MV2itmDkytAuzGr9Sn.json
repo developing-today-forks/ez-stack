@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01MBo9MV2itmDkytAuzGr9Sn",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs</path>\n<type>file</type>\n<content>\n418:             crate::stack::ScopeMode::Strict => \"strict\".to_string(),\n419:         }),\n420:         \"no_repoint\" => meta.no_repoint.map(|v| v.to_string()),\n421:         // Also allow reading per-branch `remote` as alias for push_remote\n422:         \"remote\" => meta.push_remote.clone(),\n\n(Showing lines 418-422 of 1033. Use offset=423 to continue.)\n</content>",
+  "timestamp": 1776054014462
+}

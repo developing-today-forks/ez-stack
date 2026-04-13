@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_014yRAqLNtDqprZqzK5sTqus",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n237:     let effective_repo: Option<String> = resolved_override\n238:         .clone()\n239:         .or_else(|| state.effective_pr_repo(branch));\n240: \n241:     // Resolve the push remote for cross-fork head prefix.\n242:     let push_remote = state.effective_push_remote(branch);\n243: \n244:     // Build the full stack tree for the stack section.\n245:     let tree_roots = crate::stack_body::build_full_tree(state, branch);\n246:     let stack_tree = crate::stack_body::render_full_tree(&tree_roots);\n247: \n248:     let existing_pr = github::get_pr_status_in_repo(branch, effective_repo.as_deref())?;\n249: \n250:     let pr_url = match existing_pr {\n251:         Some(pr) => {\n\n(Showing lines 237-251 of 790. Use offset=252 to continue.)\n</content>",
+  "timestamp": 1776044175668
+}

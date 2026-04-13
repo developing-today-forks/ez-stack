@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01GCGFdkeWUMdZPfbKhXGoVo",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 2 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/git.rs:\n  Line 575: pub fn log_oneline(range: &str, max: usize) -> Result<Vec<(String, String)>> {\n  Line 587: pub fn log_oneline_time(branch: &str) -> Option<u64> {",
+  "timestamp": 1776042707277
+}

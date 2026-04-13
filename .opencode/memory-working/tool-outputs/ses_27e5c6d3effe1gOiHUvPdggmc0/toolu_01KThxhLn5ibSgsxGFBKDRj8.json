@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01KThxhLn5ibSgsxGFBKDRj8",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "On branch feat/repoint-after-merge\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   src/cmd/checkout.rs\n\tmodified:   src/cmd/config.rs\n\tmodified:   src/cmd/create.rs\n\tmodified:   src/cmd/log.rs\n\tmodified:   src/cmd/push.rs\n\tmodified:   src/cmd/sync.rs\n\tmodified:   src/github.rs\n\tmodified:   src/stack.rs\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+  "timestamp": 1776054304320
+}

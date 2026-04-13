@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_012MwURWW1BoDoW9M6no5tCW",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "9ab69407c6345aabe2d3ec9b15ce36da4eb9d151\trefs/heads/feat/adopt-clean\na538d552fac8c25c16a55b2ae5d2346e31030f94\trefs/heads/feat/config\nc9f9b72ae39777325183eb12085adc5161b15a77\trefs/heads/feat/fork\ncec74c5df83e4627c46246c9f5ffe66a04dcc513\trefs/heads/feat/integration-fixes\n1e6facd52473ddc23cfbfce088726b9b75c6b590\trefs/heads/feat/local-merge\nc7724d74b86934bbdede0fa5902c3e1021debd3b\trefs/heads/feat/pr-body\n3673f324c72ad3b42853aaf1846037bbeea786ba\trefs/heads/feat/preflight\nf6adc253b29854e39ccc8dfd8ba9f4828a277533\trefs/heads/feat/worktree-ops\naacdb4f8d3413f7182706380af59c275b6cf4ff6\trefs/heads/fix/worktree-create-from-and-switch\n73a01326b11d60a976cf8b6a3099ed185bce5223\trefs/heads/main\nf22f18fcd47fe4c93defa68aa5090a4d311edbf4\trefs/heads/test/repoint-copy\n",
+  "timestamp": 1776054433104
+}

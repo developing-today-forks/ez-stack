@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01NgHM4MvybEgcxYa7KUH7LK",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 3 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/main.rs:\n  Line 149:         Commands::Push {\n  Line 178:         Commands::Submit {\n  Line 195:         Commands::Sync {",
+  "timestamp": 1776052237951
+}

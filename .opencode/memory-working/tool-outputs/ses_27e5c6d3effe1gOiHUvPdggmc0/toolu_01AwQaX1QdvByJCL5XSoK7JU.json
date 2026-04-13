@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01AwQaX1QdvByJCL5XSoK7JU",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/Cargo.toml</path>\n<type>file</type>\n<content>\n1: [package]\n2: name = \"ez-stack\"\n3: version = \"0.2.22\"\n4: edition = \"2024\"\n5: rust-version = \"1.85\"\n6: description = \"A CLI tool for managing stacked PRs with GitHub\"\n7: license = \"MIT\"\n8: repository = \"https://github.com/rohoswagger/ez-stack\"\n9: homepage = \"https://github.com/rohoswagger/ez-stack\"\n10: keywords = [\"git\", \"github\", \"stacked-prs\", \"cli\", \"developer-tools\"]\n11: categories = [\"command-line-utilities\", \"development-tools\"]\n12: readme = \"README.md\"\n13: \n14: [[bin]]\n15: name = \"ez\"\n16: path = \"src/main.rs\"\n17: \n18: [dependencies]\n19: clap = { version = \"4\", features = [\"derive\"] }\n20: owo-colors = { version = \"4\", features = [\"supports-colors\"] }\n21: console = \"0.15\"\n22: indicatif = \"0.17\"\n23: anyhow = \"1\"\n24: thiserror = \"2\"\n25: serde = { version = \"1\", features = [\"derive\"] }\n26: serde_json = \"1\"\n27: dialoguer = \"0.11\"\n28: \n29: [profile.release]\n30: lto = true\n31: strip = true\n\n(End of file - total 31 lines)\n</content>",
+  "timestamp": 1776043803698
+}

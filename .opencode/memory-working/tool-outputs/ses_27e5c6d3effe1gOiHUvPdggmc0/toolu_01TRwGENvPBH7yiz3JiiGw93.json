@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01TRwGENvPBH7yiz3JiiGw93",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Working in linked worktree `/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge`\n  \u001b[2m→\u001b[0m \u001b[2mEdit and run commands here, not in the main repo checkout.\u001b[0m\n\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m Committed c7724d7 on `feat/pr-body`: fix: scope stack tree to current chain only, re-edit new PR body after number assigned, remove legacy stack code\n\u001b[2m{\"after\":\"c7724d7\",\"before\":\"7308519\",\"branch\":\"feat/pr-body\",\"cmd\":\"commit\",\"deletions\":249,\"files_changed\":2,\"insertions\":34,\"out_of_scope_count\":0,\"out_of_scope_files\":[],\"scope_defined\":false,\"scope_mode\":null}\u001b[0m\n\u001b[2m[ok | 172ms]\u001b[0m\n",
+  "timestamp": 1776044391772
+}

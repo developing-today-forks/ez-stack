@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_0162SZAZqB65eFdt3AeYp5gS",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 18 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs:\n  Line 19: pub struct BranchMeta {\n  Line 42: pub struct StackState {\n  Line 61: impl StackState {\n  Line 235:             BranchMeta {\n  Line 415: impl BranchMeta {\n  Line 426:     fn sample_state() -> StackState {\n  Line 440:     fn linear_state() -> StackState {\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/navigate.rs:\n  Line 112:     fn sample_state() -> StackState {\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/log.rs:\n  Line 202:     fn make_state() -> StackState {\n  Line 206:             BranchMeta {\n  Line 219:             BranchMeta {\n  Line 230:         StackState {\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/create.rs:\n  Line 233:     fn make_state() -> StackState {\n  Line 237:             BranchMeta {\n  Line 248:         StackState {\n\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/checkout.rs:\n  Line 204:     fn state_with_pr() -> StackState {\n  Line 208:             BranchMeta {\n  Line 219:         StackState {",
+  "timestamp": 1776051984590
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01SktNQyBdyVAnzAtcPsCTWN",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m no changes selected for commit\n  → Preferred: `ez commit -m \"msg\" -- <paths>` for focused files\n  → Bulk tracked update: `ez commit -am \"msg\"`\n  → Bulk tracked + untracked update: `ez commit -Am \"msg\"`\n  → Partial hunks: `git add -p` then `ez commit -m \"msg\"`\n\u001b[2m[exit:6 | 60ms]\u001b[0m\n---\n# trying with a real change\n  \u001b[2m→\u001b[0m \u001b[2mUntracked files detected. `-a` stages tracked files only, use `-A`/`-Am` to include them.\u001b[0m\n\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m Committed f22f18f on `test/repoint-copy`: test: repoint verification commit\n\u001b[2m{\"after\":\"f22f18f\",\"before\":\"a538d55\",\"branch\":\"test/repoint-copy\",\"cmd\":\"commit\",\"deletions\":0,\"files_changed\":1,\"insertions\":1,\"out_of_scope_count\":0,\"out_of_scope_files\":[],\"scope_defined\":false,\"scope_mode\":null}\u001b[0m\n\u001b[2m[ok | 169ms]\u001b[0m\n",
+  "timestamp": 1776052999938
+}

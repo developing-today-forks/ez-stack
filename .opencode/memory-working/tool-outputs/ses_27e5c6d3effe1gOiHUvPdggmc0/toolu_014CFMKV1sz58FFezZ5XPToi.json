@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_014CFMKV1sz58FFezZ5XPToi",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "src/cmd/checkout.rs:217:                no_repoint: None,\nsrc/cmd/checkout.rs:228:            no_repoint: None,\nsrc/cmd/create.rs:246:                no_repoint: None,\nsrc/cmd/create.rs:257:            no_repoint: None,\nsrc/cmd/log.rs:215:                no_repoint: None,\nsrc/cmd/log.rs:229:                no_repoint: None,\nsrc/cmd/log.rs:240:            no_repoint: None,\nsrc/cmd/push.rs:846:    fn no_repoint_config_suppresses_repoint() {\nsrc/cmd/push.rs:847:        // Even when repos differ, no_repoint should suppress\nsrc/cmd/push.rs:851:        state.get_branch_mut(\"feat/a\").unwrap().no_repoint = Some(true);\nsrc/cmd/push.rs:854:        assert!(state.effective_no_repoint(\"feat/a\"), \"should be suppressed\");\n",
+  "timestamp": 1776054105491
+}

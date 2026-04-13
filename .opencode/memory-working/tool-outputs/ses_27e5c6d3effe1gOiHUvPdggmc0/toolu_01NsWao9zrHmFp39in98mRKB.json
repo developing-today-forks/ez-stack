@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01NsWao9zrHmFp39in98mRKB",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "{\"active_edit_root\":\"/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge\",\"branch\":\"feat/repoint-after-merge\",\"children\":[],\"commits\":3,\"depth\":7,\"in_linked_worktree\":true,\"is_draft\":false,\"modified_files\":7,\"needs_restack\":false,\"parent\":\"feat/pr-body\",\"pr_number\":null,\"pr_state\":null,\"pr_url\":null,\"scope\":null,\"scope_defined\":false,\"scope_mode\":null,\"staged_files\":1,\"untracked_files\":0}\n",
+  "timestamp": 1776054347519
+}

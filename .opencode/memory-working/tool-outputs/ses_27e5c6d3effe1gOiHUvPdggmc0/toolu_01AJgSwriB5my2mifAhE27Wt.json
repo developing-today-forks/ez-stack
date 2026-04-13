@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01AJgSwriB5my2mifAhE27Wt",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 1 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs:\n  Line 196: pub fn get_all_pr_statuses_in_repo(repo: Option<&str>) -> std::collections::HashMap<String, PrInfo> {",
+  "timestamp": 1776052192906
+}

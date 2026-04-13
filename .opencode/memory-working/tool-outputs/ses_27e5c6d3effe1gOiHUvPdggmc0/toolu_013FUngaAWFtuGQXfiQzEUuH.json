@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_013FUngaAWFtuGQXfiQzEUuH",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/sync.rs</path>\n<type>file</type>\n<content>\n663:     #[test]\n664:     fn run_signatures_compile() {\n665:         // Verifies the public API is correct at compile time.\n666:         let f: fn(bool, bool, bool) -> anyhow::Result<()> = super::run;\n667:         let _ = std::mem::size_of_val(&f);\n668:     }\n669: \n670:     #[test]\n671:     fn cleanup_candidate_branches_includes_local_unmanaged_branches() {\n672:         let managed = vec![\"feat/a\".to_string()];\n\n(Showing lines 663-672 of 742. Use offset=673 to continue.)\n</content>",
+  "timestamp": 1776052572772
+}

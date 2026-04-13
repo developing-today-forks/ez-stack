@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01LfSHFnA4GAhBLe8V31WaGt",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "f22f18f test: repoint verification commit\na538d55 test: add draft/no-pr resolution and stack ancestor edge case tests\nf4389d3 feat: add rerere prompt to ez init with fallback to rr-cache directory\nb803bde feat: add --no-pr, --no-draft flags and wire draft config into push/submit\nf979f00 feat: wire default_from config into ez create\na834a5a feat: add draft, no_pr, rerere config keys with bool validation\n93afc5b feat: add ez config command for post-init configuration\n73a0132 Fix nested-subdirectory repo detection so ez works below the repo root\n4e813b6 Keep lockfile aligned with the 0.2.21 release version\n7596f80 Fix worktree navigation and make sync realign trunk to remote\n",
+  "timestamp": 1776054291571
+}

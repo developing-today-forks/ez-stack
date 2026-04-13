@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01FWJwqK4pykYy6pzBrvMeZi",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cli.rs</path>\n<type>file</type>\n<content>\n244:     /// Fetch trunk, detect merged PRs, clean up, and restack\n245:     #[command(after_help = \"\\\n246: Examples:\n247:   ez sync\n248:   ez sync --autostash\n249:   ez sync --dry-run\n250:   ez sync --force\")]\n251:     Sync {\n252:         /// Show what sync would do without making changes\n253:         #[arg(long)]\n254:         dry_run: bool,\n255: \n256:         /// Stash uncommitted changes before sync and restore after\n257:         #[arg(long)]\n258:         autostash: bool,\n259: \n260:         /// Force-remove worktrees and branches even if they have uncommitted changes\n261:         #[arg(long)]\n262:         force: bool,\n263:     },\n264: \n265:     /// Fetch trunk, refresh it locally, and rebase stale branches onto their latest parent tips\n266:     #[command(after_help = \"\\\n267: Examples:\n268:   ez restack\n269:   ez restack --force\")]\n270:     Restack {\n271:         /// Force restack even if merge commits are detected in feature branches\n272:         #[arg(long)]\n273:         force: bool,\n\n(Showing lines 244-273 of 1108. Use offset=274 to continue.)\n</content>",
+  "timestamp": 1776052237920
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01PdCCcyC8hQA2GGWvmeHP4D",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs</path>\n<type>file</type>\n<content>\n488:             state.get_branch_mut(branch)?.scope_mode = Some(mode);\n489:         }\n490:         \"no_repoint\" => {\n491:             state.get_branch_mut(branch)?.no_repoint = Some(parse_bool(value)?);\n492:         }\n\n(Showing lines 488-492 of 1033. Use offset=493 to continue.)\n</content>",
+  "timestamp": 1776054028875
+}

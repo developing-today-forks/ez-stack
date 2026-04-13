@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01XynQ66quxmdSmgTx4fEmUb",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "<!-- ez:begin — remove this line to disable ez edits -->\n<!-- below this line automated updates may occur -->\n\n<!-- ez:summary:begin -->\nPart of a stack managed by `ez`.\n<!-- ez:summary:end -->\n\n<!-- ez:stack:begin -->\n**Stack** (this PR is 7 of 8):\n1. feat/adopt-clean ([dezren39#3](https://github.com/dezren39/ez-stack/pull/3))\n2. feat/config ([rohoswagger#9](https://github.com/rohoswagger/ez-stack/pull/9))\n3. feat/preflight ([dezren39#1](https://github.com/dezren39/ez-stack/pull/1))\n4. feat/worktree-ops ([dezren39#2](https://github.com/dezren39/ez-stack/pull/2))\n5. feat/fork ([dezren39#3](https://github.com/dezren39/ez-stack/pull/3))\n6. feat/local-merge ([dezren39#4](https://github.com/dezren39/ez-stack/pull/4))\n7. **feat/pr-body** ← you are here\n8. fix/worktree-create-from-and-switch ([dezren39#2](https://github.com/dezren39/ez-stack/pull/2))\n<!-- ez:stack:end -->\n\n<!-- above this line automated updates may occur -->\n<!-- ez:end — remove this line to disable ez edits -->\n",
+  "timestamp": 1776044138566
+}

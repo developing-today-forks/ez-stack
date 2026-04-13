@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_014GzZ5ZTvvG5y8eLJtiMMhV",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "7308519 feat: wire ez-marker body generation into push/submit with contiguous stack updates\n17c1d23 feat: add commit reference extraction and ez-marker PR body generation\n1e6facd feat: add --remote flag to push/submit, fix cross-fork PR detection and already-exists handling\n32f3dce test: add merge/fold CLI parse tests, merge_squash, rename_branch, update_branch_ref git helper tests\n8d66501 feat: add local merge (ez merge --local) and fold (ez fold) commands\nc9f9b72 chore: remove unused effective_remote method\nd31322e feat: walk stack for push remote and PR repo inheritance\nca3a08e feat: make all PR commands fork-aware with effective_pr_repo helper\nc547826 feat: add resolve_repo_shorthand for smart repo resolution from remotes, owners, and names\n6668c1e feat: ez config branch attr detection, --branch flag, pr/pr_repo/pr_number smart parsing\n",
+  "timestamp": 1776044254189
+}

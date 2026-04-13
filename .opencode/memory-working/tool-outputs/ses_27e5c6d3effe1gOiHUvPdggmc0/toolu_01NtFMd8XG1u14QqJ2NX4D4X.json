@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01NtFMd8XG1u14QqJ2NX4D4X",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "    Checking ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)\nwarning: method `effective_no_repoint` is never used\n   --> src/stack.rs:188:12\n    |\n 61 | impl StackState {\n    | --------------- method in this implementation\n...\n188 |     pub fn effective_no_repoint(&self, branch: &str) -> bool {\n    |            ^^^^^^^^^^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `ez-stack` (bin \"ez\") generated 1 warning\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.88s\n",
+  "timestamp": 1776051930851
+}

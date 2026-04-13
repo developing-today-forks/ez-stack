@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01A4WoZ3QTir3A2k4jmjLQv9",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "-rwxr-xr-x 1 drewry.pope staff 2854608 Apr 12 20:40 /Users/drewry.pope/.cargo/bin/ez\nez 0.2.22\n\u001b[2m[ok | 0ms]\u001b[0m\n",
+  "timestamp": 1776044485647
+}

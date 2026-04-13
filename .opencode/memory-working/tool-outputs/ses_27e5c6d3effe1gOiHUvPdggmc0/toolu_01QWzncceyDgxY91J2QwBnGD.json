@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01QWzncceyDgxY91J2QwBnGD",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n779:         state.get_branch_mut(\"feat/a\").unwrap().pr_repo = Some(\"original/repo\".to_string());\n780: \n781:         // push_or_update_pr only sets pr_repo in the None (new PR) branch\n782:         // Existing PR path just updates pr_number, doesn't touch pr_repo\n783:         assert_eq!(state.get_branch(\"feat/a\").unwrap().pr_repo.as_deref(), Some(\"original/repo\"));\n784:     }\n785: }\n\n(End of file - total 785 lines)\n</content>",
+  "timestamp": 1776052520072
+}

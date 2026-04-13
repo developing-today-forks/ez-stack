@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_019ayb35uNe3uVjYcbQoKDq4",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 3 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/sync.rs:\n  Line 401:             // Update child PR bases after reparenting (cross-fork-aware, no_repoint-guarded).\n  Line 405:                 if state.effective_no_repoint(child) {\n  Line 407:                         \"Skipped PR base update for `{child}` (no_repoint is set) \\u{2014} update PR #{child_pr_number} manually\"",
+  "timestamp": 1776054077502
+}

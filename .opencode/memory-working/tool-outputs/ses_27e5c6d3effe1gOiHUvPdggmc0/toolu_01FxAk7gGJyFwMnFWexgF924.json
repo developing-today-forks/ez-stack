@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01FxAk7gGJyFwMnFWexgF924",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "test stack::tests::effective_pr_repo_unknown_branch_falls_back_to_config ... ok\ntest stack::tests::test_meta_dir_ends_with_ez ... ok\n\ntest result: ok. 287 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.29s\n\n",
+  "timestamp": 1776053485597
+}

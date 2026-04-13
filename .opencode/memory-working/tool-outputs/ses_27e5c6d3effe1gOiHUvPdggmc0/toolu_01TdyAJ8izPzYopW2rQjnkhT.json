@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01TdyAJ8izPzYopW2rQjnkhT",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs</path>\n<type>file</type>\n<content>\n385:                 enable_rerere();\n386:             }\n387:         }\n388:         \"no_repoint\" => {\n389:             state.no_repoint = Some(parse_bool(value)?);\n390:         }\n391:         _ => {\n392:             bail!(EzError::UserMessage(format!(\"unknown config key `{key}`\")));\n\n(Showing lines 385-392 of 1033. Use offset=393 to continue.)\n</content>",
+  "timestamp": 1776053999013
+}

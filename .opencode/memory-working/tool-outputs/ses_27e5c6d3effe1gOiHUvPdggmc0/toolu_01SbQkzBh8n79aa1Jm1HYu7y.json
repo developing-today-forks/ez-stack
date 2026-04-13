@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01SbQkzBh8n79aa1Jm1HYu7y",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "    Checking ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge)\nwarning: function `stack_ancestors` is never used\n  --> src/cmd/push.rs:11:4\n   |\n11 | fn stack_ancestors(\n   |    ^^^^^^^^^^^^^^^\n   |\n   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: struct `AncestorPr` is never constructed\n  --> src/stack_body.rs:51:12\n   |\n51 | pub struct AncestorPr {\n   |            ^^^^^^^^^^\n\nwarning: function `build_stack_section` is never used\n  --> src/stack_body.rs:58:8\n   |\n58 | pub fn build_stack_section(ancestors: &[AncestorPr]) -> Option<String> {\n   |        ^^^^^^^^^^^^^^^^^^^\n\nwarning: function `build_stack_body` is never used\n  --> src/stack_body.rs:77:8\n   |\n77 | pub fn build_stack_body(ancestors: &[AncestorPr], user_body: &str) -> String {\n   |        ^^^^^^^^^^^^^^^^\n\nwarning: `ez-stack` (bin \"ez\") generated 4 warnings\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.23s\n",
+  "timestamp": 1776044254099
+}

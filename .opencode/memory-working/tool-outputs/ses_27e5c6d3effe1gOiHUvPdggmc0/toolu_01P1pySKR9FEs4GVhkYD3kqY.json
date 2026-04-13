@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01P1pySKR9FEs4GVhkYD3kqY",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "dezren39/ez-stack\n\u001b[2m[ok | 7ms]\u001b[0m\n---\ndezren39/ez-stack#6\n\u001b[2m[ok | 7ms]\u001b[0m\n---\n{\"number\":6,\"state\":\"OPEN\"}\n---\nno pull requests found for branch \"dezren39:test/repoint-copy\"\n",
+  "timestamp": 1776053084969
+}

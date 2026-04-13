@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01Pka4jkKQCoyj6b6mJvyrC2",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "GitHub auto-links in PR body:\n  #4 → links to same repo issue/PR #4\n  owner/repo#4 → links to cross-repo issue/PR #4\n  **Closes owner/repo#4** → bold text, reference still auto-links\n  [text](url) → explicit markdown link\n\nKeyword behavior in PR body text (NOT in commit messages):\n  GitHub only processes close keywords in PR body when PR is merged\n  The keywords in PR body don't auto-close on their own in body text\n  For display purposes they're just text with auto-linked references\n",
+  "timestamp": 1776043256197
+}

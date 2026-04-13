@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01WosK2QHn6egW1nfkPXkJBL",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/create.rs</path>\n<type>file</type>\n<content>\n245:                 scope_mode: None,\n246:                 no_repoint: None,\n247:             },\n\n(Showing lines 245-247 of 342. Use offset=248 to continue.)\n</content>",
+  "timestamp": 1776054130154
+}

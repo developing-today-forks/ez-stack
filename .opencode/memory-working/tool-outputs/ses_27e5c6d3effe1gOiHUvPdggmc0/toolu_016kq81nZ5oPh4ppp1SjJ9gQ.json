@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_016kq81nZ5oPh4ppp1SjJ9gQ",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 6 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs:\n  Line 352:         \"no_repoint\" => state.no_repoint.map(|v| v.to_string()),\n  Line 388:         \"no_repoint\" => {\n  Line 389:             state.no_repoint = Some(parse_bool(value)?);\n  Line 420:         \"no_repoint\" => meta.no_repoint.map(|v| v.to_string()),\n  Line 490:         \"no_repoint\" => {\n  Line 491:             state.get_branch_mut(branch)?.no_repoint = Some(parse_bool(value)?);",
+  "timestamp": 1776053970857
+}

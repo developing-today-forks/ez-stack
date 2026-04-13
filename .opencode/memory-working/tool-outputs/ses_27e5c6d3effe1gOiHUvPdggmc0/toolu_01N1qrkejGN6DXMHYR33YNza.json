@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01N1qrkejGN6DXMHYR33YNza",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/push.rs</path>\n<type>file</type>\n<content>\n720:         assert!(effective.is_none());\n721:     }\n722: \n723:     #[test]\n724:     fn repo_resolution_skips_empty_config_string() {\n725:         // Config repo is empty string (old state format): should fall through\n726:         let mut state = StackState::new(\"main\".to_string());\n727:         state.repo = Some(String::new());\n728:         state.add_branch(\"feat/a\", \"main\", \"aaa\", None, None);\n729:         state.get_branch_mut(\"feat/a\").unwrap().pr_repo = Some(\"stored/repo\".to_string());\n730: \n731:         let repo_override: Option<&str> = None;\n732:         let effective = repo_override\n733:             .map(|s| s.to_string())\n734:             .or_else(|| state.effective_pr_repo(\"feat/a\"));\n735:         assert_eq!(effective.as_deref(), Some(\"stored/repo\"));\n736:     }\n737: \n738:     #[test]\n739:     fn pr_repo_stored_only_when_cli_flag_passed() {\n\n(Showing lines 720-739 of 785. Use offset=740 to continue.)\n</content>",
+  "timestamp": 1776052511602
+}

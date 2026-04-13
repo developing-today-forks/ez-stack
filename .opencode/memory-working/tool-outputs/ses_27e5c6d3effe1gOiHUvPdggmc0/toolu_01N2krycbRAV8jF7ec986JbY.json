@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01N2krycbRAV8jF7ec986JbY",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "947f9ed feat: add cross-repo PR repointing in push, --repoint flag, --submit flag on sync, and close_pr_in_repo helper\n88571cc feat: fix multi-repo PR lookup in sync and propagate metadata to direct children on merge cleanup\ncf739d5 feat: add no_repoint config (global + per-branch) to control cross-repo PR repointing\nc7724d7 fix: scope stack tree to current chain only, re-edit new PR body after number assigned, remove legacy stack code\n7308519 feat: wire ez-marker body generation into push/submit with contiguous stack updates\n",
+  "timestamp": 1776054338097
+}

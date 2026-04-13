@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01CudQKsSZkucmkSd97SoXL1",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/stack.rs</path>\n<type>file</type>\n<content>\n245:     }\n246: \n247:     pub fn children_of(&self, parent: &str) -> Vec<String> {\n248:         let mut children: Vec<String> = self\n249:             .branches\n250:             .values()\n251:             .filter(|b| b.parent == parent)\n252:             .map(|b| b.name.clone())\n253:             .collect();\n254:         children.sort();\n255:         children\n256:     }\n257: \n258:     /// Reparent direct children to a new parent without changing `parent_head`.\n259:     ///\n260:     /// `parent_head` tracks the commit the child is currently based on. Reparenting\n261:     /// alone does not move the branch tip, so that old base must be preserved until\n262:     /// a later restack/rebase actually happens.\n263:     pub fn reparent_children_preserving_parent_head(\n264:         &mut self,\n265:         old_parent: &str,\n266:         new_parent: &str,\n267:     ) -> Result<Vec<String>> {\n268:         let children = self.children_of(old_parent);\n269:         for child_name in &children {\n\n(Showing lines 245-269 of 684. Use offset=270 to continue.)\n</content>",
+  "timestamp": 1776042716820
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01T2AQcbrBVzDZPnTFYMd23a",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cli.rs</path>\n<type>file</type>\n<content>\n1113:                 assert_eq!(repo.as_deref(), Some(\"org/repo\"));\n1114:             }\n1115:             _ => panic!(\"expected submit command\"),\n1116:         }\n1117:     }\n1118: }\n\n(End of file - total 1118 lines)\n</content>",
+  "timestamp": 1776052555499
+}

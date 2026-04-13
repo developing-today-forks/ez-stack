@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01HvemqhvmytZeAvhbocCBWL",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 1 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs:\n  Line 6: fn run_gh(args: &[&str]) -> Result<String> {",
+  "timestamp": 1776053810780
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01AYJ1EKfGJ8so5AVBNzmYdQ",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/sync.rs</path>\n<type>file</type>\n<content>\n399:             let _ = state.reparent_children_preserving_parent_head(branch_name, &parent_name)?;\n400: \n401:             // Update child PR bases after reparenting (cross-fork-aware, no_repoint-guarded).\n402:             for child in &direct_children {\n403:                 let child_pr = state.get_branch(child).ok().and_then(|m| m.pr_number);\n404:                 let Some(child_pr_number) = child_pr else { continue };\n405:                 if state.effective_no_repoint(child) {\n406:                     ui::warn(&format!(\n407:                         \"Skipped PR base update for `{child}` (no_repoint is set) \\u{2014} update PR #{child_pr_number} manually\"\n408:                     ));\n409:                     continue;\n410:                 }\n411:                 let child_repo = state.effective_pr_repo(child);\n412:                 if let Err(e) = github::update_pr_base_in_repo(\n413:                     child_pr_number,\n\n(Showing lines 399-413 of 742. Use offset=414 to continue.)\n</content>",
+  "timestamp": 1776054084881
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01CwcbzoHwnWFuXjcHiNLPdo",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs</path>\n<type>file</type>\n<content>\n170:                 if let Some(repo) = Self::repo_from_remote(&remote_name) {\n171:                     return Some(repo);\n172:                 }\n173:             }\n174:         }\n175:         // 5. Global state.repo\n176:         self.repo.clone().filter(|s| !s.is_empty())\n177:     }\n178: \n179:     /// Extract owner/repo from a git remote's URL.\n180:     fn repo_from_remote(remote_name: &str) -> Option<String> {\n181:         let url = git::remote_url(remote_name).ok()?;\n182:         crate::github::repo_name_from_url(&url)\n183:     }\n184: \n\n(Showing lines 170-184 of 691. Use offset=185 to continue.)\n</content>",
+  "timestamp": 1776051805694
+}

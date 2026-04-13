@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01UmedY1932fHHuUJBYtfi3D",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs</path>\n<type>file</type>\n<content>\n35: \n36: /// Global keys that accept only boolean values.\n37: const BOOL_KEYS: &[&str] = &[\"draft\", \"no_pr\", \"rerere\", \"no_repoint\"];\n\n(Showing lines 35-37 of 1033. Use offset=38 to continue.)\n</content>",
+  "timestamp": 1776053954844
+}

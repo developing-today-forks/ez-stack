@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01Q4qbGA1b4ctbvD6kTMrZRV",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m error: unrecognized subcommand 'feat/repoint-after-merge'\n\nUsage: ez worktree <COMMAND>\n\nFor more information, try '--help'.\n\n  \u001b[2m→\u001b[0m \u001b[2mRun `ez --help` to see available commands\u001b[0m\n\u001b[2m[exit:5 | 3ms]\u001b[0m\n",
+  "timestamp": 1776051690766
+}

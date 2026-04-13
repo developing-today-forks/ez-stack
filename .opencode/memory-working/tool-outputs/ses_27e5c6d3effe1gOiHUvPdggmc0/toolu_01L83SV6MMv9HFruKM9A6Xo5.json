@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01L83SV6MMv9HFruKM9A6Xo5",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs</path>\n<type>file</type>\n<content>\n131:     Ok(())\n132: }\n133: \n134: pub fn get_pr_status(branch: &str) -> Result<Option<PrInfo>> {\n135:     get_pr_status_in_repo(branch, None)\n\n(Showing lines 131-135 of 991. Use offset=136 to continue.)\n</content>",
+  "timestamp": 1776052278139
+}

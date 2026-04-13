@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01NU2SZA7Kh1P2unic9kc4D1",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs</path>\n<type>file</type>\n<content>\n48:     pub repo: Option<String>,\n49:     #[serde(skip_serializing_if = \"Option::is_none\")]\n50:     pub draft: Option<bool>,\n51:     #[serde(skip_serializing_if = \"Option::is_none\")]\n52:     pub no_pr: Option<bool>,\n53:     #[serde(skip_serializing_if = \"Option::is_none\")]\n54:     pub rerere: Option<bool>,\n55:     /// When true, cross-repo PR repointing is blocked globally.\n56:     #[serde(skip_serializing_if = \"Option::is_none\")]\n57:     pub no_repoint: Option<bool>,\n58:     pub branches: HashMap<String, BranchMeta>,\n59: }\n60: \n61: impl StackState {\n62:     pub fn new(trunk: String) -> Self {\n63:         Self {\n64:             trunk,\n65:             remote: \"origin\".to_string(),\n66:             default_from: None,\n67:             repo: None,\n\n(Showing lines 48-67 of 702. Use offset=68 to continue.)\n</content>",
+  "timestamp": 1776053847374
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01XN3UpFYjmtegVTenXVEGXZ",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "   Compiling ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)\n    Finished `release` profile [optimized] target(s) in 25.17s\n   Replacing /Users/drewry.pope/.cargo/bin/ez\n    Replaced package `ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)` with `ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)` (executable `ez`)\nwarning: be sure to add `/Users/drewry.pope/.cargo/bin` to your PATH to be able to run the installed binaries\n",
+  "timestamp": 1776054244795
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01NrC88DJxur98ysUN1mRUNX",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "diff --git a/src/github.rs b/src/github.rs\nindex 081ac80..6b5dace 100644\n--- a/src/github.rs\n+++ b/src/github.rs\n@@ -132,6 +132,7 @@ pub fn update_pr_base_in_repo(pr_number: u64, new_base: &str, repo: Option<&str>\n }\n \n /// Close an existing PR (e.g. before recreating it in a different repo).\n+/// Returns Ok even if the PR is already closed.\n pub fn close_pr_in_repo(pr_number: u64, repo: Option<&str>) -> Result<()> {\n     let num = pr_number.to_string();\n     let mut args: Vec<&str> = vec![\"pr\", \"close\", &num];\n@@ -141,8 +142,18 @@ pub fn close_pr_in_repo(pr_number: u64, repo: Option<&str>) -> Result<()> {\n         args.push(\"--repo\");\n         args.push(&repo_arg);\n     }\n-    run_gh(&args)?;\n-    Ok(())\n+    match run_gh(&args) {\n+        Ok(_) => Ok(()),\n+        Err(e) => {\n+            let msg = format!(\"{e}\");\n+            // gh returns an error when the PR is already closed — treat as success.\n+            if msg.contains(\"already closed\") || msg.contains(\"CLOSED\") || msg.contains(\"MERGED\") {\n+                Ok(())\n+            } else {\n+                Err(e)\n+            }\n+        }\n+    }\n }\n \n pub fn get_pr_status(branch: &str) -> Result<Option<PrInfo>> {\n",
+  "timestamp": 1776054312044
+}

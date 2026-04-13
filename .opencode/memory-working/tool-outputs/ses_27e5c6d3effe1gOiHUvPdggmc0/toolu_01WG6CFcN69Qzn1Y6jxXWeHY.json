@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01WG6CFcN69Qzn1Y6jxXWeHY",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": " 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\ntest stack::tests::effective_pr_repo_none_when_nothing_set ... ok\nInitialized empty Git repository in /private/var/folders/k9/k2ksrtk174g4lmbcnfvn4xv40000gp/T/ez-tests-pr-repo-empty-config-79560-1776052595338487000/.git/\n[main (root-commit) 0e8ac74] initial\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\ntest stack::tests::effective_pr_repo_skips_empty_config ... ok\nInitialized empty Git repository in /private/var/folders/k9/k2ksrtk174g4lmbcnfvn4xv40000gp/T/ez-tests-pr-repo-unknown-branch-79560-1776052595415272000/.git/\n[main (root-commit) 0e8ac74] initial\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\ntest stack::tests::effective_pr_repo_unknown_branch_falls_back_to_config ... ok\ntest stack::tests::test_meta_dir_ends_with_ez ... ok\n\nfailures:\n\n---- cmd::push::tests::repoint_not_detected_when_repos_match stdout ----\n\nthread 'cmd::push::tests::repoint_not_detected_when_repos_match' (23663084) panicked at src/cmd/push.rs:826:9:\nsame repo should not trigger repoint\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    cmd::push::tests::repoint_not_detected_when_repos_match\n\ntest result: FAILED. 286 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.11s\n\nerror: test failed, to rerun pass `--bin ez`\n",
+  "timestamp": 1776052595515
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01Ng5ArBont1FdVk1DgbCJu8",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cli.rs</path>\n<type>file</type>\n<content>\n1098:             Commands::Push { remote, repo, .. } => {\n1099:                 assert_eq!(remote.as_deref(), Some(\"fork\"));\n1100:                 assert_eq!(repo.as_deref(), Some(\"upstream/repo\"));\n1101:             }\n1102:             _ => panic!(\"expected push command\"),\n1103:         }\n1104:     }\n1105: \n1106:     #[test]\n1107:     fn parses_submit_remote_flag() {\n1108:         let cli = Cli::try_parse_from([\"ez\", \"submit\", \"--remote\", \"fork\", \"--repo\", \"org/repo\"])\n1109:             .expect(\"parse submit --remote --repo\");\n1110:         match cli.command {\n1111:             Commands::Submit { remote, repo, .. } => {\n1112:                 assert_eq!(remote.as_deref(), Some(\"fork\"));\n\n(Showing lines 1098-1112 of 1118. Use offset=1113 to continue.)\n</content>",
+  "timestamp": 1776052546579
+}

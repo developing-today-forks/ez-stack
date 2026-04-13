@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01QmugbmwMUEp9RqgJDQ1z87",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 8 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/github.rs:\n  Line 192: pub fn get_all_pr_statuses() -> std::collections::HashMap<String, PrInfo> {\n  Line 193:     get_all_pr_statuses_in_repo(None)\n  Line 196: pub fn get_all_pr_statuses_in_repo(repo: Option<&str>) -> std::collections::HashMap<String, PrInfo> {\n  Line 217:         merge_pr_status_page(&mut map, &values);\n  Line 228: fn merge_pr_status_page(\n  Line 656:     fn merge_pr_status_page_keeps_first_pr_for_reused_branch_names() {\n  Line 681:         merge_pr_status_page(&mut map, &values);\n  Line 747:         let prs = get_all_pr_statuses();",
+  "timestamp": 1776050995601
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_018D3ihEPT4ekBZMA1QhA25Z",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs</path>\n<type>file</type>\n<content>\n31:     (\"scope\", \"File scope patterns (comma-separated)\"),\n32:     (\"scope_mode\", \"Scope enforcement mode (warn/strict)\"),\n33:     (\"no_repoint\", \"Block cross-repo PR repointing for this branch (true/false)\"),\n34: ];\n35: \n\n(Showing lines 31-35 of 1033. Use offset=36 to continue.)\n</content>",
+  "timestamp": 1776053939042
+}

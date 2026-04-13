@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01DMhzqbPB575XoVkR61uthU",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs</path>\n<type>file</type>\n<content>\n185:     /// Whether cross-repo PR repointing is blocked for a branch.\n186:     ///\n187:     /// Resolution: per-branch > global > false.\n188:     pub fn effective_no_repoint(&self, branch: &str) -> bool {\n189:         self.branches\n190:             .get(branch)\n191:             .and_then(|m| m.no_repoint)\n192:             .unwrap_or_else(|| self.no_repoint.unwrap_or(false))\n193:     }\n194: \n195:     pub fn meta_dir() -> Result<PathBuf> {\n196:         Ok(git::git_common_dir()?.join(\"ez\"))\n197:     }\n198: \n199:     pub fn state_path() -> Result<PathBuf> {\n200:         Ok(Self::meta_dir()?.join(\"stack.json\"))\n201:     }\n202: \n203:     pub fn is_initialized() -> Result<bool> {\n204:         Ok(Self::state_path()?.exists())\n\n(Showing lines 185-204 of 702. Use offset=205 to continue.)\n</content>",
+  "timestamp": 1776053862710
+}

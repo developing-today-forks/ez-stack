@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01UoVCDVBTzonAdFveTAAe9U",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/stack.rs</path>\n<type>file</type>\n<content>\n65:             remote: \"origin\".to_string(),\n66:             default_from: None,\n67:             repo: None,\n68:             draft: None,\n69:             no_pr: None,\n70:             no_repoint: None,\n71:             rerere: None,\n72:             branches: HashMap::new(),\n73:         }\n74:     }\n75: \n76:     /// Resolve the effective push remote for a branch.\n77:     ///\n78:     /// Resolution order:\n79:     ///   1. branch.push_remote (per-branch override)\n80:     ///   2. Parent's effective push remote (walk up the stack)\n81:     ///   3. Git tracking remote for this branch\n82:     ///   4. Default branch's tracking remote\n83:     ///   5. state.remote (global config)\n84:     ///   6. git default_remote()\n\n(Showing lines 65-84 of 702. Use offset=85 to continue.)\n</content>",
+  "timestamp": 1776053854990
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_018oaHau2BFGMc29ucKQFrw2",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 2 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-local-merge/src/github.rs:\n  Line 298: pub fn repo_name_from_url(url: &str) -> Option<String> {\n  Line 309: pub fn repo_name() -> Result<String> {",
+  "timestamp": 1776043768015
+}

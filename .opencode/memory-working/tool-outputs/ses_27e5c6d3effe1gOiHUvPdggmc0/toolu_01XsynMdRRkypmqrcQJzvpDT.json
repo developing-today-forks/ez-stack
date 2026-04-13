@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01XsynMdRRkypmqrcQJzvpDT",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "test/repoint-main\n---\n{\"active_edit_root\":\"/Users/drewry.pope/ez-stack\",\"branch\":\"test/repoint-main\",\"children\":[],\"commits\":0,\"depth\":1,\"in_linked_worktree\":false,\"is_draft\":false,\"modified_files\":1,\"needs_restack\":false,\"parent\":\"main\",\"pr_number\":null,\"pr_state\":null,\"pr_url\":null,\"scope\":null,\"scope_defined\":false,\"scope_mode\":null,\"staged_files\":346,\"untracked_files\":6}\n\u001b[2m[ok | 563ms]\u001b[0m\n",
+  "timestamp": 1776054499219
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01C7aMjWiXBSuAHsQp53fubn",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "Short SHA backtick: `7419588` — no link\nShort SHA bare: 7419588 — auto-links if commit exists in repo\nFull SHA: 7419588abc123... — auto-links\n\nFor cross-repo, need full URL: https://github.com/owner/repo/commit/SHA\n",
+  "timestamp": 1776043249790
+}

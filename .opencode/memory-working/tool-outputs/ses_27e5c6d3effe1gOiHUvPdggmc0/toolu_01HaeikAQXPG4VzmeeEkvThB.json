@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01HaeikAQXPG4VzmeeEkvThB",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "read",
+  "fullOutput": "<path>/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/cmd/config.rs</path>\n<type>file</type>\n<content>\n350:         \"no_pr\" => state.no_pr.map(|v| v.to_string()),\n351:         \"rerere\" => state.rerere.map(|v| v.to_string()),\n352:         \"no_repoint\" => state.no_repoint.map(|v| v.to_string()),\n353:         _ => None,\n354:     }\n\n(Showing lines 350-354 of 1033. Use offset=355 to continue.)\n</content>",
+  "timestamp": 1776053977840
+}

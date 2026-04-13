@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01WgrRBZVgw4rN4GDLUPt1ZC",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "grep",
+  "fullOutput": "Found 4 matches\n/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge/src/github.rs:\n  Line 640:       printf '%s' '[{\"number\":10,\"html_url\":\"https://github.com/org/repo/pull/10\",\"state\":\"closed\",\"title\":\"Newest\",\"draft\":false,\"merged_at\":\"2026-01-01T00:00:00Z\",\"base\":{\"ref\":\"main\"},\"head\":{\"ref\":\"feat/reused\"}},{\"number\":11,\"html_url\":\"https://github.com/org/repo/pull/11\",\"state\":\"open\",\"title\":\"Other\",\"draft\":true,\"merged_at\":null,\"base\":{\"ref\":\"develop\"},\"head\":{\"ref\":\"feat/other\"}}]'\n  Line 642:       printf '%s' '[{\"number\":4,\"html_url\":\"https://github.com/org/repo/pull/4\",\"state\":\"closed\",\"title\":\"Old\",\"draft\":false,\"merged_at\":null,\"base\":{\"ref\":\"main\"},\"head\":{\"ref\":\"feat/reused\"}}]'\n  Line 662:                 \"state\": \"closed\",\n  Line 672:                 \"state\": \"closed\",",
+  "timestamp": 1776052260266
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01K99iLG73fvA3mkoAYnPDgu",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "{\n    \"active_edit_root\": \"/Users/drewry.pope/ez-stack\",\n    \"branch\": \"feat/worktree-ops\",\n    \"children\": [\n        \"feat/fork\"\n    ],\n    \"commits\": 2,\n    \"depth\": 3,\n    \"in_linked_worktree\": false,\n    \"is_draft\": true,\n    \"modified_files\": 0,\n    \"needs_restack\": false,\n    \"parent\": \"feat/preflight\",\n    \"pr_number\": 2,\n    \"pr_state\": \"OPEN\",\n    \"pr_url\": \"https://github.com/dezren39/ez-stack/pull/2\",\n    \"scope\": null,\n    \"scope_defined\": false,\n    \"scope_mode\": null,\n    \"staged_files\": 0,\n    \"untracked_files\": 2\n}\n",
+  "timestamp": 1776052904173
+}

@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_017qHN47NhkuE9Ngrf18ZNvo",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "c7724d7 fix: scope stack tree to current chain only, re-edit new PR body after number assigned, remove legacy stack code\n7308519 feat: wire ez-marker body generation into push/submit with contiguous stack updates\n17c1d23 feat: add commit reference extraction and ez-marker PR body generation\n1e6facd feat: add --remote flag to push/submit, fix cross-fork PR detection and already-exists handling\n32f3dce test: add merge/fold CLI parse tests, merge_squash, rename_branch, update_branch_ref git helper tests\n",
+  "timestamp": 1776044467245
+}

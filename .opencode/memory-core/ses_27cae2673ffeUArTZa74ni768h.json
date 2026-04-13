@@ -1,0 +1,21 @@
+{
+  "sessionID": "ses_27cae2673ffeUArTZa74ni768h",
+  "blocks": {
+    "goal": {
+      "value": "Implement PR-E: `ez merge --local` and `ez fold` commands in ez-stack Rust CLI. Add --local flag to merge, new fold command, git helpers, CLI args, and dispatch.",
+      "charLimit": 1000,
+      "lastModified": "2026-04-12T20:11:17.599Z"
+    },
+    "progress": {
+      "value": "✅ 1. Added git helpers (merge_squash, merge_no_ff, rename_branch, update_branch_ref) to git.rs\n✅ 2. Added --local, --strategy, --into, --force to Merge CLI + added Fold command to cli.rs\n✅ 3. Implemented run_local() in merge.rs with squash/rebase/merge strategies\n✅ 4. Created fold.rs with range parsing, branch folding, reparenting, optional rename\n✅ 5. Registered fold in cmd/mod.rs and dispatch in main.rs\n✅ 6. cargo check --tests: clean, cargo test: 170 passed, 0 failed",
+      "charLimit": 2000,
+      "lastModified": "2026-04-12T20:13:45.456Z"
+    },
+    "context": {
+      "value": "Editing: src/git.rs, src/cli.rs, src/cmd/merge.rs, src/cmd/fold.rs, src/cmd/mod.rs, src/main.rs\nKey: merge_base, fast_forward_merge, hard_reset already exist in git.rs. run_git is private fn. rebase() exists returning bool.\nStack API: state.children_of(), state.remove_branch(), state.get_branch_mut(), state.path_to_trunk(), state.is_managed(), state.is_trunk()\nConstraint: Never make PRs/issues without asking.",
+      "charLimit": 1500,
+      "lastModified": "2026-04-12T20:11:50.013Z"
+    }
+  },
+  "updatedAt": "2026-04-12T20:13:45.456Z"
+}

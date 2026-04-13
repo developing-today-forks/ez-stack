@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01GFbfS9aC7Pzi5MePZmxAVW",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "  \u001b[2m→\u001b[0m \u001b[2mUse `ez switch feat/repoint-after-merge` to switch, or `ez delete feat/repoint-after-merge` to recreate\u001b[0m\n\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m branch `feat/repoint-after-merge` already exists — use `ez checkout feat/repoint-after-merge` to switch to it\n\u001b[2m[exit:5 | 23ms]\u001b[0m\n",
+  "timestamp": 1776051697287
+}

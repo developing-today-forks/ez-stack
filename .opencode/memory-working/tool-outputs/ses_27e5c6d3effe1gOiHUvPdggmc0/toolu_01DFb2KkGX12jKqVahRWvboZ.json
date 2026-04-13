@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01DFb2KkGX12jKqVahRWvboZ",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "Manage git worktrees\n\nUsage: ez worktree <COMMAND>\n\nCommands:\n  create  Create a stacked branch and check it out in a new worktree at .worktrees/<name>\n  delete  Remove a worktree and its branch from the stack\n  list    List all worktrees with their name, branch, and path\n  help    Print this message or the help of the given subcommand(s)\n\nOptions:\n  -h, --help  Print help\n\u001b[2m[ok | 0ms]\u001b[0m\n",
+  "timestamp": 1776051702122
+}

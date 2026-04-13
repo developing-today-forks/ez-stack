@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01LJRQx2UUDe1do3TZuy32Wp",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "   Compiling ez-stack v0.2.22 (/Users/drewry.pope/ez-stack/.worktrees/feat-repoint-after-merge)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.70s\n     Running unittests src/main.rs (target/debug/deps/ez-34abc3a9a7887aa9)\n\nrunning 2 tests\ntest cmd::push::tests::repoint_detected_when_branch_and_parent_repos_differ ... ok\nInitialized empty Git repository in /private/var/folders/k9/k2ksrtk174g4lmbcnfvn4xv40000gp/T/ez-tests-push-repoint-match-88790-1776052628470352000/.git/\n[main (root-commit) c0106ec] initial\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\ntest cmd::push::tests::repoint_not_detected_when_repos_match ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 285 filtered out; finished in 0.11s\n\n",
+  "timestamp": 1776052628582
+}
