@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01EKbPY2HFY4nD6SBobHVXHJ",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[33m⚠\u001b[39m\u001b[0m Branch `test/repoint-main` has unmerged changes — use --force to delete anyway\n\u001b[1m\u001b[31m✗\u001b[39m\u001b[0m git command failed: error: the branch 'test/repoint-main' is not fully merged\nhint: If you are sure you want to delete it, run 'git branch -D test/repoint-main'\nhint: Disable this message with \"git config set advice.forceDeleteBranch false\"\n\u001b[2m[exit:1 | 92ms]\u001b[0m\nTo https://github.com/dezren39/ez-stack.git\n - [deleted]         test/repoint-main\n",
+  "timestamp": 1776054589882
+}

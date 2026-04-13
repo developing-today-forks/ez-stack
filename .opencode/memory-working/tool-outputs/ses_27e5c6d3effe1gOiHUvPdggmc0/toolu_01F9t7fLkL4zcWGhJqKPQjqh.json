@@ -1,0 +1,7 @@
+{
+  "callID": "toolu_01F9t7fLkL4zcWGhJqKPQjqh",
+  "sessionID": "ses_27e5c6d3effe1gOiHUvPdggmc0",
+  "tool": "bash",
+  "fullOutput": "\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Pushed `test/repoint-main`\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Repointing PR #1 — closing in developing-today-forks/ez-stack and recreating in dezren39/ez-stack\n\u001b[1m\u001b[34m●\u001b[39m\u001b[0m Created PR #8: https://github.com/dezren39/ez-stack/pull/8\n\u001b[1m\u001b[32m✓\u001b[39m\u001b[0m PR: https://github.com/dezren39/ez-stack/pull/8\n\u001b[2m{\"branch\":\"test/repoint-main\",\"cmd\":\"push\",\"created\":false,\"out_of_scope_count\":0,\"out_of_scope_files\":[],\"pr_number\":8,\"pr_url\":\"https://github.com/dezren39/ez-stack/pull/8\",\"scope_defined\":false,\"scope_mode\":null}\u001b[0m\n\u001b[2m[ok | 7.0s]\u001b[0m\n",
+  "timestamp": 1776054559693
+}
